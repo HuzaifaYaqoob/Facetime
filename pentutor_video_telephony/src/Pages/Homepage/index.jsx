@@ -1,10 +1,10 @@
 
 
 
-const Homepage = (props) =>{
-    return(
+const Homepage = (props) => {
+    return (
         <>
-        this is home page
+            this is home page
         </>
     )
 }
