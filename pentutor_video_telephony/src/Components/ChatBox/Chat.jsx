@@ -6,12 +6,12 @@ import { connect, useDispatch } from "react-redux"
 import { MAKE_ACTIVE_TAB } from "../../redux/ActionTypes/UtilityTypes"
 import ChatMessage from "./ChatMessage"
 
-const ChatHeader = () => {
+export const SidebarHeader = ({text}) => {
     const diaptch = useDispatch()
     return (
         <>
             <div className="p-2 flex items-center justify-between gap-3 mb-4">
-                <p className="text-2xl">Chat</p>
+                <p className="text-2xl">{text}</p>
                 <div
                     className="w-[30px] h-[30px] cursor-pointer rounded-full bg-white shadow-md flex items-center justify-center"
                     onClick={()=>{
@@ -92,7 +92,7 @@ const Chat = (props) => {
     return (
         <>
             <div className="min-w-[400px] max-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
-                <ChatHeader />
+                <SidebarHeader text={'Chat'} />
                 <div className="flex-1 overflow-auto px-2">
                     {
                         chat_messages.map((msg, index) => {

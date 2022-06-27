@@ -5,7 +5,7 @@ const MenuIcon = ({ text, color, icon, onClick }) => {
         <>
             <div>
                 <div
-                    className="rounded-full w-[55px] h-[55px] bg-white shadow-lg mb-2 cursor-pointer flex items-center justify-center"
+                    className="rounded-full mx-auto w-[55px] h-[55px] bg-white shadow-lg mb-2 cursor-pointer flex items-center justify-center"
                     onClick={onClick}
                 >
                     {icon}
