@@ -1,6 +1,8 @@
 
 
 
+import { useState } from "react"
+import { connect } from "react-redux"
 import ChatMessage from "./ChatMessage"
 
 const ChatHeader = () => {
@@ -18,17 +20,36 @@ const ChatHeader = () => {
     )
 }
 
-const ChatInput = () => {
+const ChatInput = (props) => {
+    const [inp_value, setInpValue] = useState('')
+
+    const send_chat_message = () => {
+        props.onSendMessage(inp_value)
+        setInpValue('')
+    }
     return (
         <>
-            <div className="bg-white px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 justify-between">
+            <div
+                className="bg-white px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 justify-between"
+            >
                 <div className="cursor-pointer w-[40px] h-[40px] rounded-md border border-gray-200 flex items-center justify-center">
                     <svg className="rotate-45" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path className="fill-gray-600" d="M10.9998 3.99984V11.6665C10.9998 13.1398 9.8065 14.3332 8.33317 14.3332C6.85984 14.3332 5.6665 13.1398 5.6665 11.6665V3.33317C5.6665 2.89114 5.8421 2.46722 6.15466 2.15466C6.46722 1.8421 6.89114 1.6665 7.33317 1.6665C7.7752 1.6665 8.19912 1.8421 8.51168 2.15466C8.82424 2.46722 8.99984 2.89114 8.99984 3.33317V10.3332C8.99984 10.6998 8.69984 10.9998 8.33317 10.9998C7.9665 10.9998 7.6665 10.6998 7.6665 10.3332V3.99984H6.6665V10.3332C6.6665 10.7752 6.8421 11.1991 7.15466 11.5117C7.46722 11.8242 7.89114 11.9998 8.33317 11.9998C8.7752 11.9998 9.19912 11.8242 9.51168 11.5117C9.82424 11.1991 9.99984 10.7752 9.99984 10.3332V3.33317C9.99984 1.85984 8.8065 0.666504 7.33317 0.666504C5.85984 0.666504 4.6665 1.85984 4.6665 3.33317V11.6665C4.6665 13.6932 6.3065 15.3332 8.33317 15.3332C10.3598 15.3332 11.9998 13.6932 11.9998 11.6665V3.99984H10.9998Z" />
                     </svg>
                 </div>
                 <div className="flex-1">
-                    <input type="text" placeholder="Enter Message" multiple className="outline-none border-0 p-2" />
+                    <input
+                        type="text" placeholder="Enter Message" multiple className="outline-none border-0 p-2"
+                        value={inp_value}
+                        onChange={(e) => {
+                            setInpValue(e.target.value)
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key == 'Enter') {
+                                send_chat_message()
+                            }
+                        }}
+                    />
                 </div>
                 <div className="cursor-pointer w-[40px] h-[40px] rounded-md bg-indigo-700 flex items-center justify-center">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,23 +62,63 @@ const ChatInput = () => {
 
 }
 
+ChatInput.defaultProps = {
+    onSendMessage: () => { }
+}
 
-const Chat = () => {
+
+const CHt = [
+    { first_name: 'Huzaifa', last_name: 'Yaqoob', message: 'Hello hi', created_at: '4 min ago', picture: '' },
+    { first_name: 'Huzaifa', last_name: 'Yaqoob', message: 'Hello hi', created_at: '4 min ago', picture: '' },
+    { first_name: 'Huzaifa', last_name: 'Yaqoob', message: 'Hello hi', created_at: '4 min ago', picture: '' },
+    { first_name: 'Huzaifa', last_name: 'Yaqoob', message: 'Hello hi', created_at: '4 min ago', picture: '' },
+    { first_name: 'Huzaifa', last_name: 'Yaqoob', message: 'Hello hi', created_at: '4 min ago', picture: '' },
+]
+
+const Chat = (props) => {
+    const [chat_messages, setChatMessages] = useState(CHt)
+    console.log(props)
     return (
         <>
-            <div className="min-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
+            <div className="min-w-[400px] max-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
                 <ChatHeader />
-                <div className="flex-1">
-                    <ChatMessage />
-                    <ChatMessage />
-                    <ChatMessage />
-                    <ChatMessage />
-                    <ChatMessage />
+                <div className="flex-1 overflow-auto px-2">
+                    {
+                        chat_messages.map((msg, index) => {
+                            return (
+                                <ChatMessage data={msg} key={index} />
+                            )
+                        })
+                    }
                 </div>
-                <ChatInput />
+                <ChatInput
+                    onSendMessage={(msg) => {
+                        setChatMessages(
+                            [
+                                ...chat_messages,
+                                {
+                                    first_name : 'Danish',
+                                    last_name : 'Yaqoob',
+                                    created_at : 'just now',
+                                    message : msg
+                                }
+                            ]
+                        )
+                    }}
+                />
             </div>
         </>
     )
 }
 
-export default Chat
+
+const mapState = (state) =>{
+    return state
+
+}
+
+const mapDispatch = {
+
+}
+
+export default connect(mapState , mapDispatch)(Chat)
