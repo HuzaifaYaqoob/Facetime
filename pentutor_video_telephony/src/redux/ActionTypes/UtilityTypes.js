@@ -1,0 +1,2 @@
+
+export const MAKE_ACTIVE_TAB = 'MAKE_ACTIVE_TAB'

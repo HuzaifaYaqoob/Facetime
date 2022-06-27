@@ -2,15 +2,27 @@
 
 
 import { useState } from "react"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
+import { MAKE_ACTIVE_TAB } from "../../redux/ActionTypes/UtilityTypes"
 import ChatMessage from "./ChatMessage"
 
 const ChatHeader = () => {
+    const diaptch = useDispatch()
     return (
         <>
             <div className="p-2 flex items-center justify-between gap-3 mb-4">
                 <p className="text-2xl">Chat</p>
-                <div className="w-[30px] h-[30px] cursor-pointer rounded-full bg-white shadow-md flex items-center justify-center">
+                <div
+                    className="w-[30px] h-[30px] cursor-pointer rounded-full bg-white shadow-md flex items-center justify-center"
+                    onClick={()=>{
+                        diaptch({
+                            type : MAKE_ACTIVE_TAB,
+                            payload: {
+                                tab : undefined
+                            }
+                        })
+                    }}
+                >
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path className="stroke-red-700" d="M11.6667 11.6667L1 1M11.6667 1L1 11.6667" stroke-width="1.33333" stroke-linecap="round" />
                     </svg>
@@ -77,7 +89,6 @@ const CHt = [
 
 const Chat = (props) => {
     const [chat_messages, setChatMessages] = useState(CHt)
-    console.log(props)
     return (
         <>
             <div className="min-w-[400px] max-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
@@ -97,10 +108,10 @@ const Chat = (props) => {
                             [
                                 ...chat_messages,
                                 {
-                                    first_name : 'Danish',
-                                    last_name : 'Yaqoob',
-                                    created_at : 'just now',
-                                    message : msg
+                                    first_name: 'Danish',
+                                    last_name: 'Yaqoob',
+                                    created_at: 'just now',
+                                    message: msg
                                 }
                             ]
                         )
@@ -112,7 +123,7 @@ const Chat = (props) => {
 }
 
 
-const mapState = (state) =>{
+const mapState = (state) => {
     return state
 
 }
@@ -121,4 +132,4 @@ const mapDispatch = {
 
 }
 
-export default connect(mapState , mapDispatch)(Chat)
+export default connect(mapState, mapDispatch)(Chat)
