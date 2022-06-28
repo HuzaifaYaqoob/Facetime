@@ -1,0 +1,5 @@
+
+
+
+export const VIDEO_MODEL_TOGGLE = 'VIDEO_MODEL_TOGGLE'
+export const SHOW_VIDEO_STREAM = 'SHOW_VIDEO_STREAM'

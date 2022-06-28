@@ -1,9 +1,50 @@
 import { connect } from "react-redux"
 import { MakeActiveTab } from "../../redux/actions/Utility"
+import { add_video_to_stream, ToggleVideoMode } from "../../redux/actions/Video"
 import MenuIcon from "../Utility/Icon"
+import { ScreenShare } from "../../redux/constants/Video"
 
 
 const MenuBlock = (props) => {
+
+    const share_screen = () => {
+        let screen_obj = new ScreenShare()
+        screen_obj.get_permissions(
+            (strm) => {
+                props.add_video_to_stream(
+                    {
+                        stream: strm
+                    },
+                    () => {
+                    }
+                )
+            },
+            () => {
+                alert('permission is required for screen sharing')
+            }
+        )
+    }
+
+    const share_screen_handler = () => {
+        if (!props.video.video && !props.video.video_stream) {
+            share_screen()
+        }
+        else {
+            try {
+                props.video.video_stream.get_tracks().forEach(track => {
+                    track.stop()
+                });
+            }
+            catch {
+
+            }
+            props.ToggleVideoMode(
+                {
+                    mode: false
+                }
+            )
+        }
+    }
     return (
         <>
             <div className="min-h-[100px] bg-[#f1f4f9] rounded-3xl flex items-center justify-center gap-8 py-3 px-8">
@@ -36,7 +77,11 @@ const MenuBlock = (props) => {
                         </>
                     }
                     color='black'
-                    text='share' />
+                    text='share'
+                    onClick={() => {
+                        share_screen_handler()
+                    }}
+                />
                 <MenuIcon
                     icon={
                         <>
@@ -85,7 +130,9 @@ const mapState = state => {
 }
 
 const mapDispatch = {
-    MakeActiveTab: MakeActiveTab
+    MakeActiveTab: MakeActiveTab,
+    ToggleVideoMode: ToggleVideoMode,
+    add_video_to_stream: add_video_to_stream
 }
 
 export default connect(mapState, mapDispatch)(MenuBlock)
