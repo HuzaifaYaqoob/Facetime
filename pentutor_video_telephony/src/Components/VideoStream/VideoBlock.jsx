@@ -40,7 +40,7 @@ const VideoBlock = (props) => {
                             <>
                             </>
                     }
-                    <div className={`${is_vid_active ? 'absolute top-5 left-5 flex items-center justify-start gap-3' : 'static'}`}>
+                    <div className={`${is_vid_active ? 'absolute top-5 left-5 flex items-center justify-start gap-2' : 'static'}`}>
                         <div className={`${is_vid_active ? 'w-[45px] h-[45px]' : 'w-[120px] h-[120px] mb-5'} transition-all rounded-full bg-gray-400 mx-auto `}>
 
                         </div>

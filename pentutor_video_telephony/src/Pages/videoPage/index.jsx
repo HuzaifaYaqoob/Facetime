@@ -10,9 +10,10 @@ import { AddToPinnedStream } from '../../redux/actions/stream'
 
 const StreamPage = (props) => {
     const [permit, setPermit] = useState(false)
-    console.log(props.user.stream)
+    console.log(props.stream.pinned_stream)
 
     const get_user_medias = async () => {
+        
         const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
         const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
 
@@ -25,7 +26,7 @@ const StreamPage = (props) => {
         )
         props.AddToPinnedStream(
             {
-                stream: stream_vid
+                pinned_stream: stream_vid
             }
         )
     }

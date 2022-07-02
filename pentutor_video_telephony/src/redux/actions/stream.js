@@ -6,7 +6,7 @@ export const AddToPinnedStream = (data, success, fail) => dispatch =>{
         {
             type : SET_PINNED_STREAM,
             payload : {
-                stream : data.stream
+                ...data
             }
         }
     )

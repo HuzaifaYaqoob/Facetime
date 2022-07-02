@@ -5,7 +5,7 @@ const initialState = {
     streams: [
 
     ],
-    pinned_stream : null
+    pinned_stream: null
 }
 
 export const StreamReducer = (state = initialState, action) => {
@@ -13,7 +13,7 @@ export const StreamReducer = (state = initialState, action) => {
         case SET_PINNED_STREAM:
             return {
                 ...state,
-                pinned_stream : action.payload.stream
+                ...action.payload
             }
         default:
             return state

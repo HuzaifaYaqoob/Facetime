@@ -3,20 +3,28 @@ import MenuIcon from "../Utility/Icon"
 import { ScreenShare, VideoCapture } from "../../redux/constants/Video"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { MakeActiveTab } from '../../redux/actions/Utility'
+import { AddToPinnedStream } from "../../redux/actions/stream"
+import { useNavigate } from "react-router-dom"
 
 
 const MenuBlock = (props) => {
+    const navigate = useNavigate()
 
     const share_video_handler = () => {
         let user_stream = props.user.stream.video_stream
-        user_stream.getVideoTracks().forEach(track => {
-            track.enabled = !track.enabled
-        });
+        user_stream.getVideoTracks()[0].enabled = !user_stream.getVideoTracks()[0].enabled
         props.addUserMedia(
             {
                 video: user_stream
             }
         )
+        if (!props.stream.pinned_stream) {
+            props.AddToPinnedStream(
+                {
+                    pinned_stream: user_stream
+                }
+            )
+        }
     }
     const share_audio_handler = () => {
         let user_stream = props.user.stream.audio_stream
@@ -30,8 +38,29 @@ const MenuBlock = (props) => {
         )
     }
 
-    const share_screen_handler = () => {
+    const share_screen_handler = async () => {
+        const screen_stream = await navigator.mediaDevices.getDisplayMedia()
 
+        screen_stream.oninactive = () => {
+            props.AddToPinnedStream(
+                {
+                    pinned_stream: (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) ? props.user.stream.video_stream : null
+                }
+            )
+            // if (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) {
+            //     props.user.stream.video_stream.getVideoTracks()[0].enabled = true
+            // }
+        }
+        props.addUserMedia(
+            {
+                screen_share: screen_stream,
+            }
+        )
+        props.AddToPinnedStream(
+            {
+                pinned_stream: screen_stream
+            }
+        )
     }
 
     return (
@@ -74,7 +103,9 @@ const MenuBlock = (props) => {
                     icon={
                         <>
                             <svg width="28" height="26" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path className="fill-[#0469fa]" d="M1.5 21.5H14V26H9V28H21V26H16V21.5H28.5C28.8977 21.4995 29.2789 21.3414 29.5601 21.0601C29.8414 20.7789 29.9995 20.3977 30 20V1.5C29.9995 1.10232 29.8414 0.721056 29.5601 0.439851C29.2789 0.158647 28.8977 0.000463153 28.5 0H1.5C1.10232 0.000463153 0.721056 0.158647 0.439851 0.439851C0.158647 0.721056 0.000463153 1.10232 0 1.5V20C0.000463153 20.3977 0.158647 20.7789 0.439851 21.0601C0.721056 21.3414 1.10232 21.4995 1.5 21.5V21.5ZM2 2H28V19.5H2V2Z" />
+                                <path
+                                    className={`${(props.user.stream.screen_share?.getVideoTracks()[0].enabled ? 'fill-[#0469fa]' : 'fill-white')}`}
+                                    d="M1.5 21.5H14V26H9V28H21V26H16V21.5H28.5C28.8977 21.4995 29.2789 21.3414 29.5601 21.0601C29.8414 20.7789 29.9995 20.3977 30 20V1.5C29.9995 1.10232 29.8414 0.721056 29.5601 0.439851C29.2789 0.158647 28.8977 0.000463153 28.5 0H1.5C1.10232 0.000463153 0.721056 0.158647 0.439851 0.439851C0.158647 0.721056 0.000463153 1.10232 0 1.5V20C0.000463153 20.3977 0.158647 20.7789 0.439851 21.0601C0.721056 21.3414 1.10232 21.4995 1.5 21.5V21.5ZM2 2H28V19.5H2V2Z" />
                             </svg>
                         </>
                     }
@@ -82,7 +113,7 @@ const MenuBlock = (props) => {
                     onClick={() => {
                         share_screen_handler()
                     }}
-                    active={true}
+                    active={props.user.stream.screen_share && props.user.stream.screen_share.getVideoTracks()[0].enabled}
 
                 />
                 <MenuIcon
@@ -128,6 +159,9 @@ const MenuBlock = (props) => {
                     color='black'
                     text='leave'
                     active={true}
+                    onClick={() => {
+                        navigate('/')
+                    }}
                 />
             </div>
         </>
@@ -140,7 +174,8 @@ const mapState = state => {
 
 const mapDispatch = {
     addUserMedia: addUserMedia,
-    MakeActiveTab: MakeActiveTab
+    MakeActiveTab: MakeActiveTab,
+    AddToPinnedStream: AddToPinnedStream
 }
 
 export default connect(mapState, mapDispatch)(MenuBlock)
