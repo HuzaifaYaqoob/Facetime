@@ -3,7 +3,7 @@ import { SHOW_VIDEO_STREAM, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes
 
 const initialState = {
     video : false,
-    video_stream : null,
+    video_stream : null, // active video stream
     stream_type : null
 }
 

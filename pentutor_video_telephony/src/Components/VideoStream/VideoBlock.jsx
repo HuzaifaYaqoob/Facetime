@@ -3,24 +3,18 @@ import { connect } from "react-redux"
 import { ToggleVideoMode } from "../../redux/actions/Video"
 
 
-
 const VideoBlock = (props) => {
     const video_ref = useRef()
-    console.log(props.video)
 
     useEffect(() => {
         if (video_ref && video_ref.current) {
-            video_ref.current.srcObject = props.video.video_stream
-            props.video.video_stream.getTracks()[0].addEventListener('ended', (e) => {
-                props.ToggleVideoMode(
-                    {
-                        video: false,
-                    }
-                )
-            })
+            video_ref.current.srcObject = props.stream.pinned_stream
             video_ref.current.play()
         }
-    }, [props.video.video || props.video.stream_type || props.video.video_stream])
+    }, [
+        props.stream.pinned_stream,
+        video_ref.current
+    ])
     return (
         <>
             <div
@@ -30,7 +24,7 @@ const VideoBlock = (props) => {
                 }}
             >
                 {
-                    (props.video.video && props.video.video_stream) ?
+                    (props.stream.pinned_stream) && props.stream.pinned_stream.getVideoTracks()[0].enabled ?
                         <>
                             <div className="h-full w-full bg-gray-800 flex items-center justify-center">
                                 <video

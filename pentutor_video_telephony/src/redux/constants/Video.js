@@ -45,7 +45,6 @@ export class VideoCapture {
             success && success(this.stream_in)
         })
             .catch(err => {
-                // console.log(err)
                 fail && fail()
             })
     }

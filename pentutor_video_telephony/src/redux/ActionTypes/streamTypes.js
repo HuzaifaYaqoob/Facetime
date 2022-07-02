@@ -1,0 +1,3 @@
+
+
+export const SET_PINNED_STREAM = 'SET_PINNED_STREAM'
