@@ -14,13 +14,13 @@ const VideoBlock = (props) => {
             props.video.video_stream.getTracks()[0].addEventListener('ended', (e) => {
                 props.ToggleVideoMode(
                     {
-                        mode: false,
+                        video: false,
                     }
                 )
             })
             video_ref.current.play()
         }
-    }, [props.video.video])
+    }, [props.video.video || props.video.stream_type || props.video.video_stream])
     return (
         <>
             <div

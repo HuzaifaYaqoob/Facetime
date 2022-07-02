@@ -6,16 +6,17 @@ export const ToggleVideoMode = (data, success, fail) => dispatch =>{
     dispatch({
         type : VIDEO_MODEL_TOGGLE,
         payload : {
-            mode : data.mode
+            ...data
         }
     })
+    success && success()
 }
 
 export const add_video_to_stream = (data , success, fail) => dispatch => {
     dispatch({
         type : SHOW_VIDEO_STREAM,
         payload : {
-            stream  : data.stream
+            ...data
         }
     })
 }

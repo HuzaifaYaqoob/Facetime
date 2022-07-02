@@ -12,7 +12,9 @@ const StreamPage = (props) => {
                 <VideoStream />
                 {
                     props.utility.active_sidetab && props.utility.active_sidetab == 'CHAT' &&
-                    <Chat />
+                    <>
+                        <Chat />
+                    </>
                 }
                 {
                     props.utility.active_sidetab && props.utility.active_sidetab == 'PARTICIPANTS' &&

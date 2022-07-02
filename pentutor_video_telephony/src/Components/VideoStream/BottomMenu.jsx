@@ -2,10 +2,61 @@ import { connect } from "react-redux"
 import { MakeActiveTab } from "../../redux/actions/Utility"
 import { add_video_to_stream, ToggleVideoMode } from "../../redux/actions/Video"
 import MenuIcon from "../Utility/Icon"
-import { ScreenShare } from "../../redux/constants/Video"
+import { ScreenShare, VideoCapture } from "../../redux/constants/Video"
 
 
 const MenuBlock = (props) => {
+    console.log(props.video)
+
+    const disable_video_stream = () => {
+        try {
+            props.video.video_stream.get_tracks().forEach(track => {
+                track.stop()
+            });
+        }
+        catch {
+
+        }
+        props.ToggleVideoMode(
+            {
+                video: false
+            }
+        )
+    }
+
+    const share_video = () => {
+        let vid_cap = new VideoCapture()
+        vid_cap.get_video_capture(
+            (strm) => {
+                props.add_video_to_stream(
+                    {
+                        stream: strm,
+                        stream_type: 'VIDEO'
+                    },
+                    () => {
+                    }
+                )
+            },
+            () => {
+                alert('permission is required for screen sharing')
+            }
+        )
+    }
+
+
+    const share_video_handler = () => {
+        if (!props.video.video && !props.video.video_stream) {
+            if (props.video.stream_type == 'VIDEO') {
+                disable_video_stream()
+            }
+            else {
+                share_video()
+            }
+        }
+        else {
+            disable_video_stream()
+        }
+    }
 
     const share_screen = () => {
         let screen_obj = new ScreenShare()
@@ -13,7 +64,8 @@ const MenuBlock = (props) => {
             (strm) => {
                 props.add_video_to_stream(
                     {
-                        stream: strm
+                        stream: strm,
+                        stream_type: 'SCREEN'
                     },
                     () => {
                     }
@@ -26,23 +78,14 @@ const MenuBlock = (props) => {
     }
 
     const share_screen_handler = () => {
-        if (!props.video.video && !props.video.video_stream) {
+        if ( 
+            (!props.video.video && !props.video.video_stream) ||
+            (props.video.video && props.video.video_stream && props.video.stream_type != 'SCREEN')
+        ) {
             share_screen()
         }
         else {
-            try {
-                props.video.video_stream.get_tracks().forEach(track => {
-                    track.stop()
-                });
-            }
-            catch {
-
-            }
-            props.ToggleVideoMode(
-                {
-                    mode: false
-                }
-            )
+            disable_video_stream()
         }
     }
     return (
@@ -57,7 +100,11 @@ const MenuBlock = (props) => {
                         </>
                     }
                     color='black'
-                    text='cam' />
+                    text='cam'
+                    onClick={() => {
+                        share_video_handler()
+                    }}
+                />
                 <MenuIcon
                     icon={
                         <>
