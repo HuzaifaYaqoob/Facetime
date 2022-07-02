@@ -10,25 +10,28 @@ import { AddToPinnedStream } from '../../redux/actions/stream'
 
 const StreamPage = (props) => {
     const [permit, setPermit] = useState(false)
+    console.log(props.user.stream)
+
+    const get_user_medias = async () => {
+        const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
+        const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
+
+        setPermit(true)
+        props.addUserMedia(
+            {
+                video_stream: stream_vid,
+                audio_stream: stream_aud
+            }
+        )
+        props.AddToPinnedStream(
+            {
+                stream: stream_vid
+            }
+        )
+    }
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            setPermit(true)
-            props.addUserMedia(
-                {
-                    stream: stream
-                }
-            )
-            props.AddToPinnedStream(
-                {
-                    stream: stream
-                }
-            )
-
-        })
-            .catch(err => {
-                setPermit(false)
-            })
+        get_user_medias()
     }, [])
     return (
         <>
