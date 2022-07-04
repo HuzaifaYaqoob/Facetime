@@ -5,6 +5,8 @@ import ParticipantBlock from "../../Components/Participants/Participants"
 import VideoStream from "../../Components/VideoStream/VideoStream"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { AddToPinnedStream } from '../../redux/actions/stream'
+import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
+import { AddVideoSocket } from "../../redux/actions/socket"
 
 
 
@@ -12,8 +14,29 @@ const StreamPage = (props) => {
     const [permit, setPermit] = useState(false)
     console.log(props.stream.pinned_stream)
 
+    const videoChatWebSocket = (success, fail) => {
+        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url)
+
+        vid_socket.onopen = (event) => {
+            props.AddVideoSocket(
+                {
+                    socket: vid_socket
+                }
+            )
+
+        }
+
+        vid_socket.onmessage = (event) => {
+
+        }
+
+        vid_socket.onclose = (event) => {
+
+        }
+    }
+
     const get_user_medias = async () => {
-        
+
         const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
         const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
 
@@ -29,9 +52,16 @@ const StreamPage = (props) => {
                 pinned_stream: stream_vid
             }
         )
+
+
     }
 
+
     useEffect(() => {
+        videoChatWebSocket(
+            () => {
+            }
+        )
         get_user_medias()
     }, [])
     return (
@@ -70,6 +100,7 @@ const mapState = state => {
 }
 const mapDispatch = {
     addUserMedia: addUserMedia,
-    AddToPinnedStream: AddToPinnedStream
+    AddToPinnedStream: AddToPinnedStream,
+    AddVideoSocket: AddVideoSocket
 }
 export default connect(mapState, mapDispatch)(StreamPage)

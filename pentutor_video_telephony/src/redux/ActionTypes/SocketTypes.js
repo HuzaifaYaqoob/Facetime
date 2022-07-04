@@ -1,0 +1,4 @@
+
+
+export const ADD_USER_SOCKET = 'ADD_USER_SOCKET'
+export const ADD_VIDEO_SOCKET = 'ADD_VIDEO_SOCKET'

@@ -7,13 +7,38 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import rootReducer from './redux/rootReducer'
 
-import thunk from "redux-thunk" 
-        
-import {createStore , applyMiddleware} from 'redux'
+import thunk from "redux-thunk"
 
-const store = createStore(rootReducer , applyMiddleware(thunk))
+import { createStore, applyMiddleware } from 'redux'
+import { useEffect } from "react";
+import BaseURL, { user_websocket_url, wsBaseURL } from "./redux/ApiVariables";
+
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 function App() {
+
+  const userWebSocket = () => {
+    let user_socket = new WebSocket(wsBaseURL + user_websocket_url)
+    user_socket.onopen = (event) => {
+      console.log('OPEN : ', event)
+    }
+
+    user_socket.onmessage = (event) => {
+      console.log('MESSAGE : ' , event)
+    }
+
+    user_socket.onclose = (event) =>{
+      console.log('CLOSE : ' , event)
+    }
+
+    user_socket.onerror = (event) =>{
+      console.log('ERROR SOCKET : ' , event)
+    }
+  }
+
+  useEffect(() => {
+    userWebSocket()
+  }, [])
   return (
     <Provider store={store}>
       <BrowserRouter>
