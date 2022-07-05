@@ -10,6 +10,7 @@ import { AddVideoSocket } from "../../redux/actions/socket"
 import VideoChatNotFound from "./VideoChatNotFound"
 import { GetVideoChat } from "../../redux/actions/Video"
 import { useParams } from "react-router-dom"
+import VideoChatRequest from "./VideoChatRequest"
 
 
 
@@ -123,7 +124,7 @@ const StreamPage = (props) => {
                                     :
                                     <>
                                         <div>
-                                            Pending Approoval
+                                            <VideoChatRequest />
                                         </div>
                                     </>
                                 :
