@@ -7,11 +7,24 @@ import { addUserMedia } from "../../redux/actions/userActions"
 import { AddToPinnedStream } from '../../redux/actions/stream'
 import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { AddVideoSocket } from "../../redux/actions/socket"
+import VideoChatNotFound from "./VideoChatNotFound"
+import { GetVideoChat } from "../../redux/actions/Video"
 
+
+
+
+const VideoPageLoader = (props) => {
+    return (
+        <>
+            loading....
+        </>
+    )
+}
 
 
 const StreamPage = (props) => {
     const [permit, setPermit] = useState(false)
+    const [loading, setLoading] = useState(true)
     console.log(props.stream.pinned_stream)
 
     const videoChatWebSocket = (success, fail) => {
@@ -53,43 +66,51 @@ const StreamPage = (props) => {
             }
         )
 
-
     }
 
 
     useEffect(() => {
-        videoChatWebSocket(
-            () => {
-            }
-        )
-        get_user_medias()
+        props.GetVideoChat()
+        // videoChatWebSocket()
+        // get_user_medias()
     }, [])
     return (
         <>
             {
-                permit ?
-                    <div className="flex items-stretch justify-between p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
-                        <VideoStream />
-                        {
-                            props.utility.active_sidetab && props.utility.active_sidetab == 'CHAT' &&
-                            <>
-                                <Chat />
-                            </>
-                        }
-                        {
-                            props.utility.active_sidetab && props.utility.active_sidetab == 'PARTICIPANTS' &&
-                            <>
-                                <ParticipantBlock />
-                            </>
-                        }
-                    </div>
+                loading ?
+                    <>
+                        <VideoPageLoader />
+                    </>
                     :
                     <>
-                        <div>
-                            loading.... permission required
-                        </div>
+                        {
+                            props.video.video_chat ?
+                                props.stream.request_fulfilled ?
+                                    <div className="flex items-stretch justify-between p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
+                                        <VideoStream />
+                                        {
+                                            props.utility.active_sidetab && props.utility.active_sidetab == 'CHAT' &&
+                                            <>
+                                                <Chat />
+                                            </>
+                                        }
+                                        {
+                                            props.utility.active_sidetab && props.utility.active_sidetab == 'PARTICIPANTS' &&
+                                            <>
+                                                <ParticipantBlock />
+                                            </>
+                                        }
+                                    </div>
+                                    :
+                                    <>
+                                        <div>
+                                            Request not fulfilled
+                                        </div>
+                                    </>
+                                :
+                                <VideoChatNotFound />
+                        }
                     </>
-
             }
         </>
     )
@@ -101,6 +122,7 @@ const mapState = state => {
 const mapDispatch = {
     addUserMedia: addUserMedia,
     AddToPinnedStream: AddToPinnedStream,
-    AddVideoSocket: AddVideoSocket
+    AddVideoSocket: AddVideoSocket,
+    GetVideoChat : GetVideoChat
 }
 export default connect(mapState, mapDispatch)(StreamPage)

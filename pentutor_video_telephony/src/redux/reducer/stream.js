@@ -2,6 +2,9 @@ import { SET_PINNED_STREAM } from "../ActionTypes/streamTypes"
 
 
 const initialState = {
+    request_fulfilled : false,
+    connected : false,
+    permission_denied : false,
     streams: [
 
     ],
