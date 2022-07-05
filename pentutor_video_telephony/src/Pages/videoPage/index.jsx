@@ -30,47 +30,6 @@ const StreamPage = (props) => {
     const params = useParams()
     console.log(params)
 
-    const videoChatWebSocket = (success, fail) => {
-        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url)
-
-        vid_socket.onopen = (event) => {
-            props.AddVideoSocket(
-                {
-                    socket: vid_socket
-                }
-            )
-
-        }
-
-        vid_socket.onmessage = (event) => {
-
-        }
-
-        vid_socket.onclose = (event) => {
-
-        }
-    }
-
-    const get_user_medias = async () => {
-
-        const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
-        const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-        setPermit(true)
-        props.addUserMedia(
-            {
-                video_stream: stream_vid,
-                audio_stream: stream_aud
-            }
-        )
-        props.AddToPinnedStream(
-            {
-                pinned_stream: stream_vid
-            }
-        )
-
-    }
-
 
     useEffect(() => {
         if (params.video_chat_id) {
@@ -86,14 +45,9 @@ const StreamPage = (props) => {
                 }
             )
         }
-        // videoChatWebSocket()
-        // get_user_medias()
     }, [params.video_chat_id])
 
-    useEffect(() => {
-        // videoChatWebSocket()
-        // get_user_medias()
-    }, [])
+
     return (
         <>
             {
