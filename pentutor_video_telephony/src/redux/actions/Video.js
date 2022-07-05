@@ -1,4 +1,4 @@
-import { SHOW_VIDEO_STREAM, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
+import { GET_VIDEO_CHAT, SHOW_VIDEO_STREAM, VIDEO_CHAT_NOT_FOUND, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
 import BaseURL, { get_video_chat } from "../ApiVariables"
 
 
@@ -26,7 +26,7 @@ export const GetVideoChat = (data, success, fail) => dispatch => {
     let s_code;
 
     fetch(
-        BaseURL + get_video_chat
+        BaseURL + get_video_chat + `?video_chat_id=${data.video_chat_id}`
     )
         .then(response => {
             s_code = response.status
@@ -35,9 +35,29 @@ export const GetVideoChat = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            console.log(result)
+            if (s_code == 200) {
+                dispatch(
+                    {
+                        type: GET_VIDEO_CHAT,
+                        payload: {
+                            data: result.response.data
+                        }
+                    }
+                )
+                success && success(result.response.data)
+            }
+            else{
+                dispatch(
+                    {
+                        type: VIDEO_CHAT_NOT_FOUND,
+                        payload: {}
+                    }
+                )
+                fail && fail()
+            }
         })
         .catch(error => {
+            fail && fail()
             console.log('GET VIDEO CHAT ERROR :: ', error)
         })
 }

@@ -44,7 +44,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={<Homepage />} />
-          <Route path="/:stream_id" element={<StreamPage />} />
+          <Route path="/:video_chat_id" element={<StreamPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

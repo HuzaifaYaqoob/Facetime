@@ -9,6 +9,7 @@ import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import VideoChatNotFound from "./VideoChatNotFound"
 import { GetVideoChat } from "../../redux/actions/Video"
+import { useParams } from "react-router-dom"
 
 
 
@@ -25,7 +26,8 @@ const VideoPageLoader = (props) => {
 const StreamPage = (props) => {
     const [permit, setPermit] = useState(false)
     const [loading, setLoading] = useState(true)
-    console.log(props.stream.pinned_stream)
+    const params = useParams()
+    console.log(params)
 
     const videoChatWebSocket = (success, fail) => {
         const vid_socket = new WebSocket(wsBaseURL + video_websocket_url)
@@ -70,7 +72,24 @@ const StreamPage = (props) => {
 
 
     useEffect(() => {
-        props.GetVideoChat()
+        if (params.video_chat_id) {
+            props.GetVideoChat(
+                {
+                    video_chat_id: params.video_chat_id
+                },
+                (result) => {
+                    setLoading(false)
+                },
+                () => {
+                    setLoading(false)
+                }
+            )
+        }
+        // videoChatWebSocket()
+        // get_user_medias()
+    }, [params.video_chat_id])
+
+    useEffect(() => {
         // videoChatWebSocket()
         // get_user_medias()
     }, [])
@@ -104,7 +123,7 @@ const StreamPage = (props) => {
                                     :
                                     <>
                                         <div>
-                                            Request not fulfilled
+                                            Pending Approoval
                                         </div>
                                     </>
                                 :
@@ -123,6 +142,6 @@ const mapDispatch = {
     addUserMedia: addUserMedia,
     AddToPinnedStream: AddToPinnedStream,
     AddVideoSocket: AddVideoSocket,
-    GetVideoChat : GetVideoChat
+    GetVideoChat: GetVideoChat
 }
 export default connect(mapState, mapDispatch)(StreamPage)
