@@ -77,9 +77,7 @@ const StreamPage = (props) => {
                                     </div>
                                     :
                                     <>
-                                        <div>
-                                            <VideoChatRequest />
-                                        </div>
+                                        <VideoChatRequest />
                                     </>
                                 :
                                 <VideoChatNotFound />

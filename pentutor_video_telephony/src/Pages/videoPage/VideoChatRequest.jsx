@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { connect } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import { AddToPinnedStream } from "../../redux/actions/stream"
 import { addUserMedia } from "../../redux/actions/userActions"
@@ -9,6 +10,8 @@ import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 
 const VideoChatRequest = (props) => {
     const user_video = useRef()
+    const navigate = useNavigate()
+    const [requested, setRequested] = useState(false)
 
     const videoChatWebSocket = (success, fail) => {
         const vid_socket = new WebSocket(wsBaseURL + video_websocket_url)
@@ -29,11 +32,22 @@ const VideoChatRequest = (props) => {
         }
     }
 
-    const get_user_medias = async () => {
+    const ask_to_join_handler = () => {
+        if (props.socket.video_socket) {
+            let socket = props.socket.video_socket
+            let data = {
+                type: 'NEW_CONNECTION_REQUEST',
+                message: 'working file'
+            }
+            data = JSON.stringify(data)
+            socket.send(data)
+            setRequested(true)
+        }
+    }
 
+    const get_user_medias = async () => {
         const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
         const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
-
         props.addUserMedia(
             {
                 video_stream: stream_vid,
@@ -45,7 +59,6 @@ const VideoChatRequest = (props) => {
                 pinned_stream: stream_vid
             }
         )
-
     }
 
     useEffect(() => {
@@ -87,10 +100,30 @@ const VideoChatRequest = (props) => {
                     </div>
                     <div className="flex-1">
                         <h3 className="text-center text-4xl mb-4 capitalize">{props.video.video_chat?.name}</h3>
-                        <div className="flex items-center gap-3 w-full justify-center">
-                            <div className="px-4 py-2 rounded-full bg-indigo-600 text-white cursor-pointer">Ask to Join</div>
-                            <div className="px-4 py-2 rounded-full bg-gray-200 cursor-pointer">Cancel</div>
-                        </div>
+                        {
+                            props.socket.video_socket ?
+                                <div className="flex items-center gap-3 w-full justify-center">
+                                    <div
+                                        className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-900 active:bg-indigo-600 text-white cursor-pointer"
+                                        onClick={() => {
+                                            if (!requested) {
+                                                ask_to_join_handler()
+                                            }
+                                        }}
+                                    >{requested ? 'loading...' : 'Ask to Join'}</div>
+                                    <div
+                                        className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                                        onClick={() => {
+                                            setRequested(false)
+                                            navigate('/')
+                                        }}
+                                    >Cancel</div>
+                                </div>
+                                :
+                                <div className="mx-auto text-center">
+                                    Loading...
+                                </div>
+                        }
                     </div>
                 </div>
             </div>
