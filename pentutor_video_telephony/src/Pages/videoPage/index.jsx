@@ -25,7 +25,6 @@ const VideoPageLoader = (props) => {
 
 
 const StreamPage = (props) => {
-    const [permit, setPermit] = useState(false)
     const [loading, setLoading] = useState(true)
     const params = useParams()
     console.log(params)

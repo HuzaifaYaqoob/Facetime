@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { connect } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import { AddToPinnedStream } from "../../redux/actions/stream"
 import { addUserMedia } from "../../redux/actions/userActions"
@@ -10,11 +10,12 @@ import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 
 const VideoChatRequest = (props) => {
     const user_video = useRef()
+    const params = useParams()
     const navigate = useNavigate()
     const [requested, setRequested] = useState(false)
 
     const videoChatWebSocket = (success, fail) => {
-        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url)
+        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url + params.video_chat_id + '/?token=42b2bd5cc061eecf20bde62c301314a42316690c')
 
         vid_socket.onopen = (event) => {
             props.AddVideoSocket(
