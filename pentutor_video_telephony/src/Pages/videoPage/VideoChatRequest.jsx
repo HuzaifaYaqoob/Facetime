@@ -18,18 +18,23 @@ const VideoChatRequest = (props) => {
         const vid_socket = new WebSocket(wsBaseURL + video_websocket_url + params.video_chat_id + '/?token=42b2bd5cc061eecf20bde62c301314a42316690c')
 
         vid_socket.onopen = (event) => {
-            props.AddVideoSocket(
-                {
-                    socket: vid_socket
-                }
-            )
+
         }
         vid_socket.onmessage = (event) => {
+            let data = event.data
+            data = JSON.parse(data)
 
+            if (data.type == 'CONNECTED') {
+                props.AddVideoSocket(
+                    {
+                        socket: vid_socket
+                    }
+                )
+            }
         }
 
         vid_socket.onclose = (event) => {
-
+            // alert('something went wrong')
         }
     }
 

@@ -27,7 +27,6 @@ const VideoPageLoader = (props) => {
 const StreamPage = (props) => {
     const [loading, setLoading] = useState(true)
     const params = useParams()
-    console.log(params)
 
 
     useEffect(() => {

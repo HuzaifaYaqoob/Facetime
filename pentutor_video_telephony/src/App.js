@@ -18,7 +18,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 function App() {
 
   const userWebSocket = () => {
-    let user_socket = new WebSocket(wsBaseURL + user_websocket_url)
+    let user_socket = new WebSocket(wsBaseURL + user_websocket_url + '?token=42b2bd5cc061eecf20bde62c301314a42316690c')
     user_socket.onopen = (event) => {
       console.log('OPEN : ', event)
     }
