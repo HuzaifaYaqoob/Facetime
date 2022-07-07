@@ -12,6 +12,7 @@ import thunk from "redux-thunk"
 import { createStore, applyMiddleware } from 'redux'
 import { useEffect } from "react";
 import BaseURL, { user_websocket_url, wsBaseURL } from "./redux/ApiVariables";
+import LoginPage from "./Pages/Auth/LoginPage";
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
@@ -24,15 +25,15 @@ function App() {
     }
 
     user_socket.onmessage = (event) => {
-      console.log('MESSAGE : ' , event)
+      console.log('MESSAGE : ', event)
     }
 
-    user_socket.onclose = (event) =>{
-      console.log('CLOSE : ' , event)
+    user_socket.onclose = (event) => {
+      console.log('CLOSE : ', event)
     }
 
-    user_socket.onerror = (event) =>{
-      console.log('ERROR SOCKET : ' , event)
+    user_socket.onerror = (event) => {
+      console.log('ERROR SOCKET : ', event)
     }
   }
 
@@ -44,6 +45,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={<Homepage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/:video_chat_id" element={<StreamPage />} />
         </Routes>
       </BrowserRouter>

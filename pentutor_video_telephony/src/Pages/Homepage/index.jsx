@@ -1,28 +1,93 @@
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { get_user } from "../../redux/actions/Auth";
+import Cookies from 'js-cookie'
 
 
 const Homepage = (props) => {
+    const navigate = useNavigate()
+    const [login_loading, setLoginLoading] = useState(true)
 
-    useEffect(()=>{
+    const get_user_handler = () => {
+        props.get_user(
+            {},
+            () => {
+                setLoginLoading(false)
+            },
+            () => {
+                setLoginLoading(false)
+            }
+        )
+    }
 
-        let socket = new WebSocket('ws://192.168.238.107:8000/ws/video-chat/hello/')
-        socket.onopen = (e) =>{
-            console.log(e)
+    useEffect(() => {
+        if (Cookies.get('auth_token')) {
+            get_user_handler()
         }
-        socket.onmessage = (e) =>{
-            console.log(e)
+        else {
+            setLoginLoading(false)
         }
-        socket.onclose = (e) =>{
-            console.log(e)
-        }
-    } , [])
+        // let socket = new WebSocket('ws://192.168.238.107:8000/ws/video-chat/hello/')
+        // socket.onopen = (e) => {
+        //     console.log(e)
+        // }
+        // socket.onmessage = (e) => {
+        //     console.log(e)
+        // }
+        // socket.onclose = (e) => {
+        //     console.log(e)
+        // }
+    }, [])
     return (
         <>
-            this is home page
+            <div className="flex items-center justify-center h-screen">
+                <div>
+                    <h3 className="text-4xl text-center mb-2 text-gray-900">Premium video meeting now free <br />for everyone</h3>
+                    <p className="text-center text-gray-600">We built for students, Teachers and Businesses to make it free and available for all.</p>
+                    {
+                        login_loading ?
+                            <>
+                                loading...
+                            </>
+                            :
+                            props.user.profile ?
+                                <>
+                                    <div className="flex items-stretch justify-center gap-3 my-8">
+                                        <div className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center">Start new meeting</div>
+                                        <div>
+                                            <input type="text" placeholder="Enter Link" className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-indigo-600" />
+                                        </div>
+                                    </div>
+                                </>
+                                :
+                                <div className="flex items-center justify-center gap-5 mt-8">
+                                    <Link to={'/login'}>
+                                        <div
+                                            className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white max-w-max cursor-pointer text-lg"
+                                        >Login</div>
+                                    </Link>
+                                    <a href={'https://pentutor.com'} target='_blank'>
+                                        <div
+                                            className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white max-w-max cursor-pointer text-lg"
+                                        >Register</div>
+                                    </a>
+                                </div>
+                    }
+                </div>
+            </div>
         </>
     )
 }
 
 
-export default Homepage;
+const mapState = state => {
+    return state
+}
+
+const mapDispatch = {
+    get_user: get_user
+}
+
+
+export default connect(mapState, mapDispatch)(Homepage);

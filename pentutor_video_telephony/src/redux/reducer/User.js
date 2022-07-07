@@ -1,13 +1,11 @@
 
 
 
+import { GET_USER, LOGIN_USER } from "../ActionTypes/Auth"
 import { SET_USER_MEDIA } from "../ActionTypes/UserTypes"
 
 const initialState = {
-    profile: {
-        first_name: 'Huzaifa',
-        last_name: 'Yaqoob'
-    },
+    profile: undefined,
     is_authenticated: false,
     access_token: undefined,
     stream: {
@@ -27,6 +25,16 @@ const UserReducer = (state = initialState, action) => {
                     ...state.stream,
                     ...action.payload
                 }
+            }
+        case LOGIN_USER:
+            return {
+                ...state,
+                profile: action.payload.data
+            }
+        case GET_USER:
+            return {
+                ...state,
+                profile: action.payload.data
             }
         default:
             return state
