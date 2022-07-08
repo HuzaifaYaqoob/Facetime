@@ -4,19 +4,19 @@ import Homepage from "./Pages/Homepage";
 import StreamPage from "./Pages/videoPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Provider } from "react-redux";
-import rootReducer from './redux/rootReducer'
+import { connect } from "react-redux";
 
-import thunk from "redux-thunk"
 
-import { createStore, applyMiddleware } from 'redux'
 import { useEffect } from "react";
 import BaseURL, { user_websocket_url, wsBaseURL } from "./redux/ApiVariables";
 import LoginPage from "./Pages/Auth/LoginPage";
 
-const store = createStore(rootReducer, applyMiddleware(thunk))
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { Triangle } from 'react-loader-spinner'
 
-function App() {
+
+function App(props) {
+  const loading_size = 80
 
   const userWebSocket = () => {
     let user_socket = new WebSocket(wsBaseURL + user_websocket_url + '?token=42b2bd5cc061eecf20bde62c301314a42316690c')
@@ -41,7 +41,15 @@ function App() {
     userWebSocket()
   }, [])
   return (
-    <Provider store={store}>
+    <>
+      {
+        props.utility.loading ?
+          <div className="cover fixed bg-gray-100/50 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+            <Triangle ariaLabel="indicator" color='blue' width={loading_size} height={loading_size} />
+          </div>
+          :
+          <></>
+      }
       <BrowserRouter>
         <Routes>
           <Route path="" element={<Homepage />} />
@@ -49,8 +57,11 @@ function App() {
           <Route path="/:video_chat_id" element={<StreamPage />} />
         </Routes>
       </BrowserRouter>
-    </Provider>
+    </>
   );
 }
 
-export default App;
+
+const mapState = (state) => state
+
+export default connect(mapState, null)(App);

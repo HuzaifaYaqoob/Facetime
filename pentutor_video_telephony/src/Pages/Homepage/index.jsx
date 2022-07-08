@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { get_user } from "../../redux/actions/Auth";
 import Cookies from 'js-cookie'
+import { createNewVideoMeeting } from "../../redux/actions/Video";
 
 
 const Homepage = (props) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [login_loading, setLoginLoading] = useState(true)
 
     const get_user_handler = () => {
@@ -17,6 +19,30 @@ const Homepage = (props) => {
             },
             () => {
                 setLoginLoading(false)
+            }
+        )
+    }
+
+    const new_meeting_handler = () => {
+        dispatch({
+            type: 'LOADER',
+            payload: true
+        })
+        props.createNewVideoMeeting(
+            {},
+            (result) => {
+                dispatch({
+                    type: 'LOADER',
+                    payload: false
+                })
+                navigate(`/${result.id}`)
+            },
+            () => {
+                dispatch({
+                    type: 'LOADER',
+                    payload: false
+                })
+                alert('fail')
             }
         )
     }
@@ -54,7 +80,12 @@ const Homepage = (props) => {
                             props.user.profile ?
                                 <>
                                     <div className="flex items-stretch justify-center gap-3 my-8">
-                                        <div className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center">Start new meeting</div>
+                                        <div
+                                            className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center"
+                                            onClick={() => {
+                                                new_meeting_handler()
+                                            }}
+                                        >Start new meeting</div>
                                         <div>
                                             <input type="text" placeholder="Enter Link" className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-indigo-600" />
                                         </div>
@@ -86,7 +117,8 @@ const mapState = state => {
 }
 
 const mapDispatch = {
-    get_user: get_user
+    get_user: get_user,
+    createNewVideoMeeting: createNewVideoMeeting
 }
 
 

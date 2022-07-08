@@ -1,4 +1,4 @@
-import { GET_VIDEO_CHAT, SHOW_VIDEO_STREAM, VIDEO_CHAT_NOT_FOUND, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
+import { CREATE_VIDEO_CHAT, GET_VIDEO_CHAT, SHOW_VIDEO_STREAM, VIDEO_CHAT_NOT_FOUND, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
 
 
 const initialState = {
@@ -12,6 +12,11 @@ const initialState = {
 const VideoReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_VIDEO_CHAT:
+            return {
+                ...state,
+                video_chat: action.payload.data
+            }
+        case CREATE_VIDEO_CHAT:
             return {
                 ...state,
                 video_chat: action.payload.data
