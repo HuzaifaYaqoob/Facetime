@@ -5,7 +5,7 @@ import StreamPage from "./Pages/videoPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { connect } from "react-redux";
-
+import Cookies from "js-cookie";
 
 import { useEffect } from "react";
 import BaseURL, { user_websocket_url, wsBaseURL } from "./redux/ApiVariables";
@@ -13,6 +13,7 @@ import LoginPage from "./Pages/Auth/LoginPage";
 
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { Triangle } from 'react-loader-spinner'
+import { get_user } from "./redux/actions/Auth";
 
 
 function App(props) {
@@ -37,8 +38,20 @@ function App(props) {
     }
   }
 
+
+  const get_user_handler = () => {
+    props.get_user(
+      {},
+    )
+  }
+
+
   useEffect(() => {
+    if (Cookies.get('auth_token')) {
+      get_user_handler()
+    }
     userWebSocket()
+
   }, [])
   return (
     <>
@@ -64,4 +77,8 @@ function App(props) {
 
 const mapState = (state) => state
 
-export default connect(mapState, null)(App);
+const mapDispatch = {
+  get_user: get_user
+}
+
+export default connect(mapState, mapDispatch)(App);

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { Triangle } from "react-loader-spinner"
 import { connect } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { AddVideoSocket } from "../../redux/actions/socket"
@@ -116,7 +117,11 @@ const VideoChatRequest = (props) => {
                                                 ask_to_join_handler()
                                             }
                                         }}
-                                    >{requested ? 'loading...' : 'Ask to Join'}</div>
+                                    >{requested ?
+                                        <div className="flex items-center justify-center">
+                                            <Triangle ariaLabel="indicator" color='blue' width={60} height={60} />
+                                        </div>
+                                        : 'Ask to Join'}</div>
                                     <div
                                         className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
                                         onClick={() => {
@@ -127,7 +132,9 @@ const VideoChatRequest = (props) => {
                                 </div>
                                 :
                                 <div className="mx-auto text-center">
-                                    Loading...
+                                    <div className="flex items-center justify-center">
+                                        <Triangle ariaLabel="indicator" color='blue' width={60} height={60} />
+                                    </div>
                                 </div>
                         }
                     </div>

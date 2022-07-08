@@ -4,9 +4,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { get_user } from "../../redux/actions/Auth";
 import Cookies from 'js-cookie'
 import { createNewVideoMeeting } from "../../redux/actions/Video";
+import { Triangle } from "react-loader-spinner";
 
 
 const Homepage = (props) => {
+    const loading_size = 80
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [login_loading, setLoginLoading] = useState(true)
@@ -73,9 +75,9 @@ const Homepage = (props) => {
                     <p className="text-center text-gray-600">We built for students, Teachers and Businesses to make it free and available for all.</p>
                     {
                         login_loading ?
-                            <>
-                                loading...
-                            </>
+                            <div className="cover fixed bg-gray-100/50 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                                <Triangle ariaLabel="indicator" color='blue' width={loading_size} height={loading_size} />
+                            </div>
                             :
                             props.user.profile ?
                                 <>

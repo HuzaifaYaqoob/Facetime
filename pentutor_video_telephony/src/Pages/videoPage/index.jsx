@@ -9,17 +9,20 @@ import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import VideoChatNotFound from "./VideoChatNotFound"
 import { GetVideoChat } from "../../redux/actions/Video"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import VideoChatRequest from "./VideoChatRequest"
+import { Triangle } from "react-loader-spinner"
 
 
 
 
 const VideoPageLoader = (props) => {
+    const loading_size = 80
+
     return (
-        <>
-            loading....
-        </>
+        <div className="cover fixed bg-gray-100/50 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+            <Triangle ariaLabel="indicator" color='blue' width={loading_size} height={loading_size} />
+        </div>
     )
 }
 
@@ -27,6 +30,7 @@ const VideoPageLoader = (props) => {
 const StreamPage = (props) => {
     const [loading, setLoading] = useState(true)
     const params = useParams()
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -40,6 +44,7 @@ const StreamPage = (props) => {
                 },
                 () => {
                     setLoading(false)
+                    navigate('/')
                 }
             )
         }
@@ -57,7 +62,8 @@ const StreamPage = (props) => {
                     <>
                         {
                             props.video.video_chat ?
-                                props.stream.request_fulfilled ?
+                                (props.stream.request_fulfilled ||
+                                    (props.video.video_chat?.host?.username == props.user?.profile?.user?.username)) ?
                                     <div className="flex items-stretch justify-between p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
                                         <VideoStream />
                                         {
