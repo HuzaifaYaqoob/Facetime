@@ -22,19 +22,15 @@ function App(props) {
   const userWebSocket = () => {
     let user_socket = new WebSocket(wsBaseURL + user_websocket_url + '?token=42b2bd5cc061eecf20bde62c301314a42316690c')
     user_socket.onopen = (event) => {
-      console.log('OPEN : ', event)
     }
 
     user_socket.onmessage = (event) => {
-      console.log('MESSAGE : ', event)
     }
 
     user_socket.onclose = (event) => {
-      console.log('CLOSE : ', event)
     }
 
     user_socket.onerror = (event) => {
-      console.log('ERROR SOCKET : ', event)
     }
   }
 
@@ -50,7 +46,7 @@ function App(props) {
     if (Cookies.get('auth_token')) {
       get_user_handler()
     }
-    userWebSocket()
+    // userWebSocket()
 
   }, [])
   return (

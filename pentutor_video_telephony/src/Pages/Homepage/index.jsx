@@ -11,6 +11,7 @@ const Homepage = (props) => {
     const loading_size = 80
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [url, setUrl] = useState()
     const [login_loading, setLoginLoading] = useState(true)
 
     const get_user_handler = () => {
@@ -56,16 +57,7 @@ const Homepage = (props) => {
         else {
             setLoginLoading(false)
         }
-        // let socket = new WebSocket('ws://192.168.238.107:8000/ws/video-chat/hello/')
-        // socket.onopen = (e) => {
-        //     console.log(e)
-        // }
-        // socket.onmessage = (e) => {
-        //     console.log(e)
-        // }
-        // socket.onclose = (e) => {
-        //     console.log(e)
-        // }
+
     }, [])
     return (
         <>
@@ -89,8 +81,23 @@ const Homepage = (props) => {
                                             }}
                                         >Start new meeting</div>
                                         <div>
-                                            <input type="text" placeholder="Enter Link" className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-indigo-600" />
+                                            <input
+                                                type="text" placeholder="Enter Link"
+                                                className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-indigo-600"
+                                                onChange={(e) => {
+                                                    setUrl(e.target.value)
+                                                }}
+                                            />
                                         </div>
+                                        {
+                                            url &&
+                                            <div
+                                                className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center"
+                                                onClick={() => {
+                                                    navigate(`/${url}`)
+                                                }}
+                                            >Continue</div>
+                                        }
                                     </div>
                                 </>
                                 :

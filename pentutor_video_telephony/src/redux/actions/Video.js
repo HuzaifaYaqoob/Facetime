@@ -62,7 +62,6 @@ export const GetVideoChat = (data, success, fail) => dispatch => {
         })
         .catch(error => {
             fail && fail()
-            console.log('GET VIDEO CHAT ERROR :: ', error)
         })
 }
 
@@ -72,7 +71,7 @@ export const createNewVideoMeeting = (data, success, fail) => dispatch => {
     fetch(
         BaseURL + create_new_video_meeting,
         {
-            method : 'POST',
+            method: 'POST',
             headers: {
                 Authorization: `Token ${Cookies.get('auth_token')}`
             }
@@ -102,6 +101,5 @@ export const createNewVideoMeeting = (data, success, fail) => dispatch => {
         })
         .catch(error => {
             fail && fail()
-            console.log('CREATE VIDEO CHAT ERROR :: ', error)
         })
 }

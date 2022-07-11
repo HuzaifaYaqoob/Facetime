@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { Triangle } from "react-loader-spinner"
-import { connect } from "react-redux"
+import { connect, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { AddVideoSocket } from "../../redux/actions/socket"
-import { AddToPinnedStream } from "../../redux/actions/stream"
+import { AddActiveVideoSocket, AddVideoSocket } from "../../redux/actions/socket"
+import { AddToPinnedStream, RequestFulfilled } from "../../redux/actions/stream"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
+import Cookies from "js-cookie"
 
 
 
@@ -15,39 +16,59 @@ const VideoChatRequest = (props) => {
     const navigate = useNavigate()
     const [requested, setRequested] = useState(false)
 
+    const onNewMessage = async (event) => {
+        let data = event.data
+        data = JSON.parse(data)
+        props.stream.rtcp_connection.ontrack = (e) => {
+            alert('Track added')
+        }
+
+        if (data.type == 'CONNECTION_ACCEPTED') {
+            await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
+            if (props.user.stream.video_stream) {
+                if (props.user.stream.video_stream.getVideoTracks().length > 0) {
+                    await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
+                }
+                if (props.user.stream.audio_stream.getAudioTracks().length > 0) {
+                    await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
+                }
+            }
+            props.RequestFulfilled()
+        }
+        else if (data.type == 'CONNECTION_REJECTED') {
+            alert('You are not allowed')
+            setRequested(false)
+        }
+    }
+
     const videoChatWebSocket = (success, fail) => {
-        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url + params.video_chat_id + '/?token=42b2bd5cc061eecf20bde62c301314a42316690c')
+        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url + params.video_chat_id + `/?token=${Cookies.get('auth_token')}`)
 
         vid_socket.onopen = (event) => {
-
+            props.AddVideoSocket(
+                {
+                    socket: vid_socket
+                }
+            )
         }
-        vid_socket.onmessage = (event) => {
-            let data = event.data
-            data = JSON.parse(data)
-
-            if (data.type == 'CONNECTED') {
-                props.AddVideoSocket(
-                    {
-                        socket: vid_socket
-                    }
-                )
-            }
-        }
+        vid_socket.addEventListener('message', onNewMessage)
 
         vid_socket.onclose = (event) => {
             // alert('something went wrong')
         }
     }
 
-    const ask_to_join_handler = () => {
-        if (props.socket.video_socket) {
-            let socket = props.socket.video_socket
+    const ask_to_join_handler = async () => {
+        if (props.socket.video_socket && props.stream.rtcp_connection) {
+            let offer = props.stream.rtcp_connection.createOffer()
+            await props.stream.rtcp_connection.setLocalDescription(offer)
+
             let data = {
                 type: 'NEW_CONNECTION_REQUEST',
-                message: 'working file'
+                offer: props.stream.rtcp_connection.localDescription
             }
             data = JSON.stringify(data)
-            socket.send(data)
+            props.socket.video_socket.send(data)
             setRequested(true)
         }
     }
@@ -76,7 +97,12 @@ const VideoChatRequest = (props) => {
     }, [user_video.current])
 
     useEffect(() => {
-        videoChatWebSocket()
+        if (props.user.stream.video_stream && props.user.stream.audio_stream && !props.socket.video_socket) {
+            videoChatWebSocket()
+        }
+    }, [props.user.stream.video_stream, props.user.stream.audio_stream])
+
+    useEffect(() => {
         get_user_medias()
     }, [])
 
@@ -152,7 +178,9 @@ const mapState = state => {
 const mapDispatch = {
     addUserMedia: addUserMedia,
     AddToPinnedStream: AddToPinnedStream,
-    AddVideoSocket: AddVideoSocket
+    AddVideoSocket: AddVideoSocket,
+    AddActiveVideoSocket: AddActiveVideoSocket,
+    RequestFulfilled: RequestFulfilled
 }
 
 export default connect(mapState, mapDispatch)(VideoChatRequest)

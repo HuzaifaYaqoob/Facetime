@@ -7,57 +7,76 @@ import VideoBlock from "./VideoBlock"
 import BaseURL, { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { useParams } from "react-router-dom"
 import Cookies from "js-cookie"
+import { AddActiveVideoSocket } from "../../redux/actions/socket"
 
 const VideoStream = (props) => {
     const params = useParams()
 
 
-    const noNewUserRequest = (socket, message) => {
-        let user_inp = confirm(`${message.user.username} want to let him In, Do you want?`)
-        let data = {
-            type: user_inp ? 'NEW_CONNECTION_ACCEPTED' : 'CONNECTION_REJECTED',
-            message: user_inp ?
-                {
-                    message: 'Request Approved',
-                    user: message.user
-                }
-                :
-                {
-                    message: 'Request Canceled',
-                    user: message.user
-                }
-        }
-        data = JSON.stringify(data)
-        socket.send(data)
-    }
+    const handleNewUserRequest = async (socket, message) => {
+        let user_inp = window.confirm(`${message.user.username} want to let him In, Do you want?`)
+        let data = {}
+        if (user_inp) {
 
-    const videoChatSocketActivated = () => {
-        let vid_socket = new WebSocket(`${wsBaseURL}${video_websocket_url}${params.video_chat_id}/activated/?token=${Cookies.get('auth_token')}`)
-        vid_socket.onopen = (e) => {
-            console.log('connected')
-        }
+            await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(message.offer))
 
-        vid_socket.onmessage = (e) => {
-            let data = JSON.parse(e.data)
-            if (data.type == 'NEW_CONNECTION_REQUEST') {
-                alert('new user request')
-                noNewUserRequest(vid_socket, data)
+            let answer = await props.stream.rtcp_connection.createAnswer()
+            await props.stream.rtcp_connection.setLocalDescription(answer)
+
+            data = {
+                type: 'CONNECTION_ACCEPTED',
+                message: 'Request Approved',
+                user: message.user,
+                answer: answer
+            }
+        }
+        else {
+            data = {
+                type: 'CONNECTION_REJECTED',
+                message: 'Request Canceled',
+                user: message.user
             }
         }
 
-        vid_socket.onclose = (e) => {
-            console.log('CLOSED')
+
+        data = JSON.stringify(data)
+        socket.send(data)
+
+        await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
+        await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
+
+    }
+
+    const videoChatSocketActivated = () => {
+        let ac_vid_socket = new WebSocket(`${wsBaseURL}${video_websocket_url}${params.video_chat_id}/activated/?token=${Cookies.get('auth_token')}`)
+        ac_vid_socket.onopen = (e) => {
+            props.AddActiveVideoSocket(
+                {
+                    socket: ac_vid_socket
+                }
+            )
+            if (props.socket.video_socket) {
+                props.socket.video_socket.close()
+            }
         }
-        vid_socket.onerror = (e) => {
-            console.log('Error')
+        ac_vid_socket.onmessage = (e) => {
+            let data = JSON.parse(e.data)
+            if (data.type == 'NEW_CONNECTION_REQUEST') {
+                handleNewUserRequest(ac_vid_socket, data)
+            }
+        }
+
+        ac_vid_socket.onclose = (e) => {
+        }
+        ac_vid_socket.onerror = (e) => {
         }
     }
 
     useEffect(() => {
-        if (params.video_chat_id) {
+        if (params.video_chat_id && props.user.stream.video_stream && props.user.stream.audio_stream) {
             videoChatSocketActivated()
         }
-    }, [])
+    }, [props.user.stream.video_stream, props.user.stream.audio_stream])
 
 
     return (
@@ -77,7 +96,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-
+    AddActiveVideoSocket: AddActiveVideoSocket
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideoStream)

@@ -27,7 +27,6 @@ export const LoginHandler = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            console.log(result)
             if (s_code == 200) {
                 dispatch({
                     type: LOGIN_USER,
@@ -39,7 +38,6 @@ export const LoginHandler = (data, success, fail) => dispatch => {
             }
         })
         .catch(err => {
-            console.log(err)
             fail && fail()
         })
 }
@@ -73,7 +71,6 @@ export const get_user = (data, success, fail) => dispatch => {
             }
         })
         .catch(err => {
-            console.log(err)
             fail && fail()
         })
 }

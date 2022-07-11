@@ -44,7 +44,7 @@ const VideoBlock = (props) => {
                         <div className={`${is_vid_active ? 'w-[45px] h-[45px]' : 'w-[120px] h-[120px] mb-5'} transition-all rounded-full bg-gray-400 mx-auto `}>
 
                         </div>
-                        <p className="text-white text-center text-xl">Huzaifa Yaqoob</p>
+                        <p className="text-white text-center text-xl">{props.user.profile?.user?.username ? props.user.profile?.user?.username : 'Your Name'}</p>
                     </div>
                 </div>
             </div>

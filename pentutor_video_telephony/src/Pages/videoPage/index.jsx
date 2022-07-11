@@ -4,7 +4,7 @@ import Chat from "../../Components/ChatBox/Chat"
 import ParticipantBlock from "../../Components/Participants/Participants"
 import VideoStream from "../../Components/VideoStream/VideoStream"
 import { addUserMedia } from "../../redux/actions/userActions"
-import { AddToPinnedStream } from '../../redux/actions/stream'
+import { AddRTCPConnection, AddToPinnedStream } from '../../redux/actions/stream'
 import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import VideoChatNotFound from "./VideoChatNotFound"
@@ -32,6 +32,31 @@ const StreamPage = (props) => {
     const params = useParams()
     const navigate = useNavigate()
 
+    const makePeerConnection = async () => {
+        let connection = new RTCPeerConnection(null)
+        props.AddRTCPConnection(
+            {
+                connection: connection
+            }
+        )
+        connection.onicecandidate = function (event) {
+            console.log('onicecandidate', event.candidate);
+            if (event.candidate) {
+                
+            }
+        }
+        connection.ontrack = (e) => {
+            console.log(e)
+            alert('new track added')
+        }
+    }
+
+
+    useEffect(() => {
+        if (!props.stream.rtcp_connection) {
+            makePeerConnection()
+        }
+    }, [])
 
     useEffect(() => {
         if (params.video_chat_id) {
@@ -99,6 +124,7 @@ const mapDispatch = {
     addUserMedia: addUserMedia,
     AddToPinnedStream: AddToPinnedStream,
     AddVideoSocket: AddVideoSocket,
-    GetVideoChat: GetVideoChat
+    GetVideoChat: GetVideoChat,
+    AddRTCPConnection: AddRTCPConnection
 }
 export default connect(mapState, mapDispatch)(StreamPage)

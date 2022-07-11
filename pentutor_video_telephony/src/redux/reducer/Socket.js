@@ -1,13 +1,20 @@
-import { ADD_USER_SOCKET, ADD_VIDEO_SOCKET } from "../ActionTypes/SocketTypes"
+import { ADD_ACTIVE_VIDEO_SOCKET, ADD_USER_SOCKET, ADD_VIDEO_SOCKET } from "../ActionTypes/SocketTypes"
 
 
 const initialState = {
     user_socket: null,
-    video_socket: null
+    video_socket: null,
+    active_video_socket: null,
+
 }
 
 const SocketReducer = (state = initialState, action) => {
     switch (action.type) {
+        case ADD_ACTIVE_VIDEO_SOCKET:
+            return {
+                ...state,
+                active_video_socket: action.payload.socket
+            }
         case ADD_USER_SOCKET:
             return {
                 ...state,
