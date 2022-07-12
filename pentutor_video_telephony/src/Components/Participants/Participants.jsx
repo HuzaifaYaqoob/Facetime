@@ -6,6 +6,8 @@ import { SidebarHeader } from "../ChatBox/Chat"
 
 const User = (props) => {
     const rm_vid = useRef(null)
+    const rm_aud = useRef(null)
+    const name = 'Huzaifa Yaqoob'
 
     useEffect(() => {
         if (rm_vid.current) {
@@ -13,16 +15,28 @@ const User = (props) => {
             rm_vid.current.play()
         }
     }, [rm_vid.current])
+
+    useEffect(() => {
+        if (rm_aud.current) {
+            rm_aud.current.srcObject = props.stream.remote.stream
+            rm_aud.current.play()
+        }
+    }, [rm_aud.current])
     return (
         <>
             <div className="w-full bg-gray-200 mb-3 rounded-md cursor-pointer py-3 flex items-center justify-center flex-col">
-                <div className="h-[130px] w-[130px] rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">
-                    H
-                </div>
-                <video ref={rm_vid} className='h-[200px] w-[200px]'>
-
-                </video>
-                <p className="">Saira Huzaifa</p>
+                {
+                    props.stream.remote.stream ?
+                        <>
+                            <video ref={rm_vid} className='h-[200px] w-[200px]' />
+                            <audio controls ref={rm_aud}></audio>
+                        </>
+                        :
+                        <div className="h-[130px] w-[130px] rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">
+                            {name[0]}
+                        </div>
+                }
+                <p className="">{name}</p>
             </div>
         </>
     )
