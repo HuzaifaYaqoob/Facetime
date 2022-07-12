@@ -1,6 +1,6 @@
 {
   "name": "pentutor_video_telephony",
-  "homepage": ".",
+  "homepage": "./",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
