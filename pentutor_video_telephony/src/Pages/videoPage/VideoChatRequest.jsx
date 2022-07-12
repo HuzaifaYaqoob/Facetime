@@ -19,20 +19,9 @@ const VideoChatRequest = (props) => {
     const onNewMessage = async (event) => {
         let data = event.data
         data = JSON.parse(data)
-        props.stream.rtcp_connection.ontrack = (e) => {
-            alert('Track added')
-        }
 
         if (data.type == 'CONNECTION_ACCEPTED') {
             await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
-            if (props.user.stream.video_stream) {
-                if (props.user.stream.video_stream.getVideoTracks().length > 0) {
-                    await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
-                }
-                if (props.user.stream.audio_stream.getAudioTracks().length > 0) {
-                    await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
-                }
-            }
             props.RequestFulfilled()
         }
         else if (data.type == 'CONNECTION_REJECTED') {
@@ -60,6 +49,23 @@ const VideoChatRequest = (props) => {
 
     const ask_to_join_handler = async () => {
         if (props.socket.video_socket && props.stream.rtcp_connection) {
+            if (props.user.stream.video_stream) {
+                props.user.stream.video_stream.getVideoTracks().forEach(async trck => {
+                    await props.stream.rtcp_connection.addTrack(
+                        trck,
+                        props.user.stream.video_stream
+                    )
+                    console.log('TRACK : ', trck)
+                })
+                props.user.stream.audio_stream.getAudioTracks().forEach(async trck => {
+                    await props.stream.rtcp_connection.addTrack(
+                        trck,
+                        props.user.stream.audio_stream
+                    )
+                    console.log('TRACK : ', trck)
+                })
+            }
+
             let offer = props.stream.rtcp_connection.createOffer()
             await props.stream.rtcp_connection.setLocalDescription(offer)
 

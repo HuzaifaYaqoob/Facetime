@@ -18,10 +18,16 @@ const VideoStream = (props) => {
         let data = {}
         if (user_inp) {
 
+            
+            await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
+            await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
+            
+            
             await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(message.offer))
-
+            
             let answer = await props.stream.rtcp_connection.createAnswer()
             await props.stream.rtcp_connection.setLocalDescription(answer)
+            
 
             data = {
                 type: 'CONNECTION_ACCEPTED',
@@ -41,9 +47,6 @@ const VideoStream = (props) => {
 
         data = JSON.stringify(data)
         socket.send(data)
-
-        await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
-        await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
 
     }
 

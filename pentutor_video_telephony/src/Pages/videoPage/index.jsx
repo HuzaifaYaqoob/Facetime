@@ -42,12 +42,11 @@ const StreamPage = (props) => {
         connection.onicecandidate = function (event) {
             console.log('onicecandidate', event.candidate);
             if (event.candidate) {
-                
+
             }
         }
         connection.ontrack = (e) => {
-            console.log(e)
-            alert('new track added')
+            console.log(e.track)
         }
     }
 
