@@ -27,7 +27,7 @@ export const LoginHandler = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            if (s_code == 200) {
+            if (s_code === 200) {
                 dispatch({
                     type: LOGIN_USER,
                     payload: {
@@ -60,7 +60,7 @@ export const get_user = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            if (s_code == 200) {
+            if (s_code === 200) {
                 dispatch({
                     type: GET_USER,
                     payload: {

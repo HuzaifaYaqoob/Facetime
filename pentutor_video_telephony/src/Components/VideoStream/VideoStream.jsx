@@ -76,10 +76,10 @@ const VideoStream = (props) => {
         if (props.socket.active_video_socket && props.stream.rtcp_connection) {
             props.socket.active_video_socket.onmessage = (e) => {
                 let data = JSON.parse(e.data)
-                if (data.type == 'NEW_CONNECTION_REQUEST') {
+                if (data.type === 'NEW_CONNECTION_REQUEST') {
                     handleNewUserRequest(props.socket.active_video_socket, data)
                 }
-                else if (data.type == 'ICE_CANDIDATE') {
+                else if (data.type === 'ICE_CANDIDATE') {
                     try {
                         props.stream.rtcp_connection.addIceCandidate(data.candidate)
                     }

@@ -80,15 +80,15 @@ const StreamPage = (props) => {
         let data = event.data
         data = JSON.parse(data)
 
-        if (data.type == 'CONNECTION_ACCEPTED') {
+        if (data.type === 'CONNECTION_ACCEPTED') {
             await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
             props.RequestFulfilled()
         }
-        else if (data.type == 'CONNECTION_REJECTED') {
+        else if (data.type === 'CONNECTION_REJECTED') {
             alert('You are not allowed')
             setRequested(false)
         }
-        else if (data.type == 'ICE_CANDIDATE') {
+        else if (data.type === 'ICE_CANDIDATE') {
             try {
                 props.stream.rtcp_connection.addIceCandidate(data.candidate)
             }
@@ -170,17 +170,17 @@ const StreamPage = (props) => {
                         {
                             props.video.video_chat ?
                                 (props.stream.request_fulfilled ||
-                                    (props.video.video_chat?.host?.username == props.user?.profile?.user?.username)) ?
+                                    (props.video.video_chat?.host?.username === props.user?.profile?.user?.username)) ?
                                     <div className="flex items-stretch justify-between p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
                                         <VideoStream />
                                         {
-                                            props.utility.active_sidetab && props.utility.active_sidetab == 'CHAT' &&
+                                            props.utility.active_sidetab && props.utility.active_sidetab === 'CHAT' &&
                                             <>
                                                 <Chat />
                                             </>
                                         }
                                         {
-                                            props.utility.active_sidetab && props.utility.active_sidetab == 'PARTICIPANTS' &&
+                                            props.utility.active_sidetab && props.utility.active_sidetab === 'PARTICIPANTS' &&
                                             <>
                                                 <ParticipantBlock />
                                             </>

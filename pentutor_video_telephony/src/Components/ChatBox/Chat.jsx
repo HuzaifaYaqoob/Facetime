@@ -57,7 +57,7 @@ const ChatInput = (props) => {
                             setInpValue(e.target.value)
                         }}
                         onKeyDown={(e) => {
-                            if (e.key == 'Enter') {
+                            if (e.key === 'Enter') {
                                 send_chat_message()
                             }
                         }}

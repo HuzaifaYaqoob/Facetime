@@ -39,7 +39,7 @@ export const GetVideoChat = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            if (s_code == 200) {
+            if (s_code === 200) {
                 dispatch(
                     {
                         type: GET_VIDEO_CHAT,
@@ -84,7 +84,7 @@ export const createNewVideoMeeting = (data, success, fail) => dispatch => {
             }
         })
         .then(result => {
-            if (s_code == 201) {
+            if (s_code === 201) {
                 dispatch(
                     {
                         type: CREATE_VIDEO_CHAT,
