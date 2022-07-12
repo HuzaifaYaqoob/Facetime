@@ -19,21 +19,6 @@ import { get_user } from "./redux/actions/Auth";
 function App(props) {
   const loading_size = 80
 
-  const userWebSocket = () => {
-    let user_socket = new WebSocket(wsBaseURL + user_websocket_url + '?token=42b2bd5cc061eecf20bde62c301314a42316690c')
-    user_socket.onopen = (event) => {
-    }
-
-    user_socket.onmessage = (event) => {
-    }
-
-    user_socket.onclose = (event) => {
-    }
-
-    user_socket.onerror = (event) => {
-    }
-  }
-
 
   const get_user_handler = () => {
     props.get_user(
@@ -46,7 +31,6 @@ function App(props) {
     if (Cookies.get('auth_token')) {
       get_user_handler()
     }
-    // userWebSocket()
 
   }, [])
   return (
@@ -61,9 +45,15 @@ function App(props) {
       }
       <BrowserRouter>
         <Routes>
-          <Route path="" element={<Homepage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/:video_chat_id" element={<StreamPage />} />
+          {
+            props.user.profile ?
+              <>
+                <Route path="" element={<Homepage />} />
+                <Route path="/:video_chat_id" element={<StreamPage />} />
+              </>
+              :
+              <Route path="/login" element={<LoginPage />} />
+          }
         </Routes>
       </BrowserRouter>
     </>

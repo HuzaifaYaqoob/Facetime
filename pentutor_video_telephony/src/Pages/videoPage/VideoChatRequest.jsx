@@ -6,7 +6,6 @@ import { AddActiveVideoSocket, AddVideoSocket } from "../../redux/actions/socket
 import { AddToPinnedStream, RequestFulfilled } from "../../redux/actions/stream"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
-import Cookies from "js-cookie"
 
 
 
@@ -14,38 +13,7 @@ const VideoChatRequest = (props) => {
     const user_video = useRef()
     const params = useParams()
     const navigate = useNavigate()
-    const [requested, setRequested] = useState(false)
 
-    const onNewMessage = async (event) => {
-        let data = event.data
-        data = JSON.parse(data)
-
-        if (data.type == 'CONNECTION_ACCEPTED') {
-            await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
-            props.RequestFulfilled()
-        }
-        else if (data.type == 'CONNECTION_REJECTED') {
-            alert('You are not allowed')
-            setRequested(false)
-        }
-    }
-
-    const videoChatWebSocket = (success, fail) => {
-        const vid_socket = new WebSocket(wsBaseURL + video_websocket_url + params.video_chat_id + `/?token=${Cookies.get('auth_token')}`)
-
-        vid_socket.onopen = (event) => {
-            props.AddVideoSocket(
-                {
-                    socket: vid_socket
-                }
-            )
-        }
-        vid_socket.addEventListener('message', onNewMessage)
-
-        vid_socket.onclose = (event) => {
-            // alert('something went wrong')
-        }
-    }
 
     const ask_to_join_handler = async () => {
         if (props.socket.video_socket && props.stream.rtcp_connection) {
@@ -55,14 +23,12 @@ const VideoChatRequest = (props) => {
                         trck,
                         props.user.stream.video_stream
                     )
-                    console.log('TRACK : ', trck)
                 })
                 props.user.stream.audio_stream.getAudioTracks().forEach(async trck => {
                     await props.stream.rtcp_connection.addTrack(
                         trck,
                         props.user.stream.audio_stream
                     )
-                    console.log('TRACK : ', trck)
                 })
             }
 
@@ -75,25 +41,10 @@ const VideoChatRequest = (props) => {
             }
             data = JSON.stringify(data)
             props.socket.video_socket.send(data)
-            setRequested(true)
+            props.setRequested(true)
         }
     }
 
-    const get_user_medias = async () => {
-        const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
-        const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
-        props.addUserMedia(
-            {
-                video_stream: stream_vid,
-                audio_stream: stream_aud
-            }
-        )
-        props.AddToPinnedStream(
-            {
-                pinned_stream: stream_vid
-            }
-        )
-    }
 
     useEffect(() => {
         if (user_video.current) {
@@ -102,15 +53,7 @@ const VideoChatRequest = (props) => {
         }
     }, [user_video.current])
 
-    useEffect(() => {
-        if (props.user.stream.video_stream && props.user.stream.audio_stream && !props.socket.video_socket) {
-            videoChatWebSocket()
-        }
-    }, [props.user.stream.video_stream, props.user.stream.audio_stream])
 
-    useEffect(() => {
-        get_user_medias()
-    }, [])
 
     return (
         <>
@@ -145,11 +88,11 @@ const VideoChatRequest = (props) => {
                                     <div
                                         className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-900 active:bg-indigo-600 text-white cursor-pointer"
                                         onClick={() => {
-                                            if (!requested) {
+                                            if (!props.requested) {
                                                 ask_to_join_handler()
                                             }
                                         }}
-                                    >{requested ?
+                                    >{props.requested ?
                                         <div className="flex items-center justify-center">
                                             <Triangle ariaLabel="indicator" color='blue' width={60} height={60} />
                                         </div>
@@ -157,7 +100,7 @@ const VideoChatRequest = (props) => {
                                     <div
                                         className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
                                         onClick={() => {
-                                            setRequested(false)
+                                            props.setRequested(false)
                                             navigate('/')
                                         }}
                                     >Cancel</div>

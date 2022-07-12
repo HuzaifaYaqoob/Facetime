@@ -1,6 +1,5 @@
 import { connect } from "react-redux"
 import MenuIcon from "../Utility/Icon"
-import { ScreenShare, VideoCapture } from "../../redux/constants/Video"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { MakeActiveTab } from '../../redux/actions/Utility'
 import { AddToPinnedStream } from "../../redux/actions/stream"
@@ -47,9 +46,6 @@ const MenuBlock = (props) => {
                     pinned_stream: (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) ? props.user.stream.video_stream : null
                 }
             )
-            // if (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) {
-            //     props.user.stream.video_stream.getVideoTracks()[0].enabled = true
-            // }
         }
         props.addUserMedia(
             {

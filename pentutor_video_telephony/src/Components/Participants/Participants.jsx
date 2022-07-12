@@ -1,14 +1,30 @@
+import { useEffect, useRef } from "react"
+import { connect } from "react-redux"
 import { SidebarHeader } from "../ChatBox/Chat"
 
 
 
-const User = () => {
+const User = (props) => {
+    const rm_vid = useRef(null)
+
+    useEffect(() => {
+        console.log('running')
+        if (rm_vid.current) {
+            console.log(props.stream.remote.stream.getTracks())
+            rm_vid.current.srcObject = props.stream.remote.stream
+            console.log('adding ')
+            rm_vid.current.play()
+        }
+    }, [rm_vid.current])
     return (
         <>
             <div className="w-full bg-gray-200 mb-3 rounded-md cursor-pointer py-3 flex items-center justify-center flex-col">
                 <div className="h-[130px] w-[130px] rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">
                     H
                 </div>
+                <video ref={rm_vid} className='h-[200px] w-[200px]'>
+
+                </video>
                 <p className="">Saira Huzaifa</p>
             </div>
         </>
@@ -23,12 +39,10 @@ const ParticipantBlock = (props) => {
                 <SidebarHeader text={'Participants'} />
                 <div className="flex-1 overflow-auto">
                     <div className="pr-3">
-                        <User />
-                        <User />
-                        <User />
-                        <User />
-                        <User />
-                        <User />
+                        {
+                            props.stream.remote.stream?.getTracks().length > 0 &&
+                            <User {...props} />
+                        }
                     </div>
                 </div>
             </div>
@@ -36,4 +50,14 @@ const ParticipantBlock = (props) => {
     )
 }
 
-export default ParticipantBlock
+
+
+const mapState = state => {
+    return state
+}
+
+const mapDispatch = {
+
+}
+
+export default connect(mapState, mapDispatch)(ParticipantBlock)

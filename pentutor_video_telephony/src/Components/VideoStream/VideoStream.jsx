@@ -18,16 +18,18 @@ const VideoStream = (props) => {
         let data = {}
         if (user_inp) {
 
-            
-            await props.stream.rtcp_connection.addTrack(props.user.stream.video_stream.getVideoTracks()[0])
-            await props.stream.rtcp_connection.addTrack(props.user.stream.audio_stream.getAudioTracks()[0])
-            
-            
             await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(message.offer))
-            
+
+            props.user.stream.video_stream.getVideoTracks().forEach(tr => {
+                props.stream.rtcp_connection.addTrack(tr, props.user.stream.video_stream)
+            })
+            props.user.stream.audio_stream.getAudioTracks().forEach(tr => {
+                props.stream.rtcp_connection.addTrack(tr, props.user.stream.audio_stream)
+            })
+
+
             let answer = await props.stream.rtcp_connection.createAnswer()
             await props.stream.rtcp_connection.setLocalDescription(answer)
-            
 
             data = {
                 type: 'CONNECTION_ACCEPTED',
@@ -44,11 +46,10 @@ const VideoStream = (props) => {
             }
         }
 
-
         data = JSON.stringify(data)
         socket.send(data)
-
     }
+
 
     const videoChatSocketActivated = () => {
         let ac_vid_socket = new WebSocket(`${wsBaseURL}${video_websocket_url}${params.video_chat_id}/activated/?token=${Cookies.get('auth_token')}`)
@@ -58,17 +59,7 @@ const VideoStream = (props) => {
                     socket: ac_vid_socket
                 }
             )
-            if (props.socket.video_socket) {
-                props.socket.video_socket.close()
-            }
         }
-        ac_vid_socket.onmessage = (e) => {
-            let data = JSON.parse(e.data)
-            if (data.type == 'NEW_CONNECTION_REQUEST') {
-                handleNewUserRequest(ac_vid_socket, data)
-            }
-        }
-
         ac_vid_socket.onclose = (e) => {
         }
         ac_vid_socket.onerror = (e) => {
@@ -80,6 +71,24 @@ const VideoStream = (props) => {
             videoChatSocketActivated()
         }
     }, [props.user.stream.video_stream, props.user.stream.audio_stream])
+
+    useEffect(() => {
+        if (props.socket.active_video_socket && props.stream.rtcp_connection) {
+            props.socket.active_video_socket.onmessage = (e) => {
+                let data = JSON.parse(e.data)
+                if (data.type == 'NEW_CONNECTION_REQUEST') {
+                    handleNewUserRequest(props.socket.active_video_socket, data)
+                }
+                else if (data.type == 'ICE_CANDIDATE') {
+                    try {
+                        props.stream.rtcp_connection.addIceCandidate(data.candidate)
+                        console.log(data.candidate)
+                    }
+                    catch { }
+                }
+            }
+        }
+    }, [props.socket.active_video_socket, props.stream.rtcp_connection])
 
 
     return (
