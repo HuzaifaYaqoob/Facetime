@@ -61,7 +61,7 @@ const StreamPage = (props) => {
     }
 
     const get_user_medias = async () => {
-        const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        const stream_vid = await navigator.mediaDevices.getUserMedia({ video: true })
         const stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true })
         props.addUserMedia(
             {
@@ -171,7 +171,7 @@ const StreamPage = (props) => {
                             props.video.video_chat ?
                                 (props.stream.request_fulfilled ||
                                     (props.video.video_chat?.host?.username === props.user?.profile?.user?.username)) ?
-                                    <div className="flex items-stretch justify-between p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
+                                    <div className="flex items-stretch justify-between p-2 md:p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
                                         <VideoStream />
                                         {
                                             props.utility.active_sidetab && props.utility.active_sidetab === 'CHAT' &&
