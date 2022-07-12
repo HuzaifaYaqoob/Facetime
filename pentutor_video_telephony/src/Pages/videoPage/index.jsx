@@ -45,7 +45,6 @@ const StreamPage = (props) => {
         )
         connection.onicecandidate = function (event) {
             if (event.candidate) {
-                console.log('CAND , ', event.candidate)
                 let data = {
                     type: 'ICE_CANDIDATE',
                     // user: props.user.profile.user,
@@ -55,11 +54,9 @@ const StreamPage = (props) => {
             }
         }
         connection.ontrack = async (e) => {
-            console.log(e)
             e.streams[0].getTracks().forEach(tr => {
                 props.stream.remote.stream.addTrack(tr)
             })
-            console.log(props.stream.remote.stream.getTracks())
         }
     }
 
@@ -82,7 +79,6 @@ const StreamPage = (props) => {
     const onNewMessage = async (event) => {
         let data = event.data
         data = JSON.parse(data)
-        console.log(data.type)
 
         if (data.type == 'CONNECTION_ACCEPTED') {
             await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
@@ -95,7 +91,6 @@ const StreamPage = (props) => {
         else if (data.type == 'ICE_CANDIDATE') {
             try {
                 props.stream.rtcp_connection.addIceCandidate(data.candidate)
-                console.log(data.candidate)
             }
             catch { }
         }

@@ -8,11 +8,8 @@ const User = (props) => {
     const rm_vid = useRef(null)
 
     useEffect(() => {
-        console.log('running')
         if (rm_vid.current) {
-            console.log(props.stream.remote.stream.getTracks())
             rm_vid.current.srcObject = props.stream.remote.stream
-            console.log('adding ')
             rm_vid.current.play()
         }
     }, [rm_vid.current])

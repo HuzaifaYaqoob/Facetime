@@ -82,7 +82,6 @@ const VideoStream = (props) => {
                 else if (data.type == 'ICE_CANDIDATE') {
                     try {
                         props.stream.rtcp_connection.addIceCandidate(data.candidate)
-                        console.log(data.candidate)
                     }
                     catch { }
                 }
