@@ -40,6 +40,13 @@ const MenuBlock = (props) => {
     const share_screen_handler = async () => {
         const screen_stream = await navigator.mediaDevices.getDisplayMedia()
 
+        if (props.stream.rtcp_connection) {
+            screen_stream.getTracks().forEach(tr => {
+                alert('donna add')
+                props.stream.rtcp_connection.addTrack(tr, screen_stream)
+            })
+        }
+
         screen_stream.oninactive = () => {
             props.AddToPinnedStream(
                 {

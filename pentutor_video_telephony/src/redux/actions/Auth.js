@@ -69,6 +69,9 @@ export const get_user = (data, success, fail) => dispatch => {
                 })
                 success && success(result.response.user)
             }
+            else{
+                fail && fail()
+            }
         })
         .catch(err => {
             fail && fail()

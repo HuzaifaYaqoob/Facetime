@@ -11,6 +11,7 @@ const User = (props) => {
 
     useEffect(() => {
         if (rm_vid.current) {
+            
             rm_vid.current.srcObject = props.stream.remote.stream
             rm_vid.current.play()
         }
@@ -22,6 +23,7 @@ const User = (props) => {
             rm_aud.current.play()
         }
     }, [rm_aud.current])
+
     return (
         <>
             <div className="w-full bg-gray-200 mb-3 rounded-md cursor-pointer py-3 flex items-center justify-center flex-col">
@@ -29,7 +31,7 @@ const User = (props) => {
                     props.stream.remote.stream ?
                         <>
                             <video ref={rm_vid} className='h-[200px] w-[200px]' />
-                            <audio controls ref={rm_aud}></audio>
+                            <audio controls ref={rm_aud} className='hidden'></audio>
                         </>
                         :
                         <div className="h-[130px] w-[130px] rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">

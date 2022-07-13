@@ -43,6 +43,8 @@ const StreamPage = (props) => {
                 connection: connection
             }
         )
+
+
         connection.onicecandidate = function (event) {
             if (event.candidate) {
                 let data = {
@@ -54,9 +56,17 @@ const StreamPage = (props) => {
             }
         }
         connection.ontrack = async (e) => {
+            console.log('new track added', e)
+            if (props.stream.remote.stream.getVideoTracks().length > 0 && e.track.kind == 'video') {
+                props.stream.remote.stream.getVideoTracks().forEach(async trc => {
+                    trc.enabled = await false
+                })
+            }
+
             e.streams[0].getTracks().forEach(tr => {
                 props.stream.remote.stream.addTrack(tr)
             })
+            console.log(props.stream.remote.stream.getTracks())
         }
     }
 
@@ -154,6 +164,27 @@ const StreamPage = (props) => {
             props.socket.video_socket.addEventListener('message', onNewMessage)
         }
     }, [props.socket.video_socket, props.stream.rtcp_connection])
+
+    useEffect(() => {
+        if (props.socket.active_video_socket) {
+
+            let connection = props.stream.rtcp_connection
+            connection.onnegotiationneeded = async (e) => {
+
+                let offer = connection.createOffer()
+                await connection.setLocalDescription(offer)
+
+                let data = {
+                    type: 'CUSTOM_OFFER',
+                    offer: connection.localDescription,
+                    user: props.user.profile.user
+                }
+                data = JSON.stringify(data)
+                props.socket.active_video_socket.send(data)
+            }
+        }
+
+    }, [props.socket.active_video_socket])
 
 
 

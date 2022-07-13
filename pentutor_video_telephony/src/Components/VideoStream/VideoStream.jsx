@@ -74,7 +74,7 @@ const VideoStream = (props) => {
 
     useEffect(() => {
         if (props.socket.active_video_socket && props.stream.rtcp_connection) {
-            props.socket.active_video_socket.onmessage = (e) => {
+            props.socket.active_video_socket.onmessage = async (e) => {
                 let data = JSON.parse(e.data)
                 if (data.type === 'NEW_CONNECTION_REQUEST') {
                     handleNewUserRequest(props.socket.active_video_socket, data)
@@ -84,6 +84,24 @@ const VideoStream = (props) => {
                         props.stream.rtcp_connection.addIceCandidate(data.candidate)
                     }
                     catch { }
+                }
+                else if (data.type === 'CUSTOM_OFFER' && data.user.username != props.user.profile.user.username) {
+                    await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
+
+                    let answer = await props.stream.rtcp_connection.createAnswer()
+                    await props.stream.rtcp_connection.setLocalDescription(answer)
+                    let newdata = {
+                        type: 'CUSTOM_ANSWER',
+                        message: 'New Answer',
+                        user: data.user,
+                        answer: answer
+                    }
+                    newdata = JSON.stringify(newdata)
+                    props.socket.active_video_socket.send(newdata)
+
+                }
+                else if (data.type === 'CUSTOM_ANSWER' && data.user.username != props.user.profile.user.username) {
+                    await props.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
                 }
             }
         }

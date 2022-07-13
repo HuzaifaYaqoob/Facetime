@@ -2,7 +2,7 @@
 
 import Homepage from "./Pages/Homepage";
 import StreamPage from "./Pages/videoPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 import { connect } from "react-redux";
 import Cookies from "js-cookie";
@@ -31,7 +31,6 @@ function App(props) {
     if (Cookies.get('auth_token')) {
       get_user_handler()
     }
-
   }, [])
   return (
     <>
@@ -45,10 +44,10 @@ function App(props) {
       }
       <BrowserRouter>
         <Routes>
+          <Route path="" element={<Homepage />} />
           {
             props.user.profile ?
               <>
-                <Route path="" element={<Homepage />} />
                 <Route path="/:video_chat_id" element={<StreamPage />} />
               </>
               :
