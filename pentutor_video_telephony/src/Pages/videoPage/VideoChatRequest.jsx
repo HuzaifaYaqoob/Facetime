@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Triangle } from "react-loader-spinner"
 import { connect, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
+import { ask_to_join_handler } from "../../Constants/Stream/request_handler"
 import { AddActiveVideoSocket, AddVideoSocket } from "../../redux/actions/socket"
 import { AddToPinnedStream, RequestFulfilled } from "../../redux/actions/stream"
 import { addUserMedia } from "../../redux/actions/userActions"
@@ -14,36 +15,6 @@ const VideoChatRequest = (props) => {
     const params = useParams()
     const navigate = useNavigate()
 
-
-    const ask_to_join_handler = async () => {
-        if (props.socket.video_socket && props.stream.rtcp_connection) {
-            if (props.user.stream.video_stream) {
-                props.user.stream.video_stream.getVideoTracks().forEach(async trck => {
-                    await props.stream.rtcp_connection.addTrack(
-                        trck,
-                        props.user.stream.video_stream
-                    )
-                })
-                props.user.stream.audio_stream.getAudioTracks().forEach(async trck => {
-                    await props.stream.rtcp_connection.addTrack(
-                        trck,
-                        props.user.stream.audio_stream
-                    )
-                })
-            }
-
-            let offer = props.stream.rtcp_connection.createOffer()
-            await props.stream.rtcp_connection.setLocalDescription(offer)
-
-            let data = {
-                type: 'NEW_CONNECTION_REQUEST',
-                offer: props.stream.rtcp_connection.localDescription
-            }
-            data = JSON.stringify(data)
-            props.socket.video_socket.send(data)
-            props.setRequested(true)
-        }
-    }
 
 
     useEffect(() => {

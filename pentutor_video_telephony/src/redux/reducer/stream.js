@@ -6,7 +6,7 @@ const initialState = {
     connected: false,
     permission_denied: false,
     streams: [
-
+        
     ],
     pinned_stream: null,
     rtcp_connection: null,

@@ -14,10 +14,12 @@ import LoginPage from "./Pages/Auth/LoginPage";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { Triangle } from 'react-loader-spinner'
 import { get_user } from "./redux/actions/Auth";
-
+import { TestStore } from "./Constants/testing/test";
+import InitializeWindowStore from "./Constants/storeConstants";
 
 function App(props) {
   const loading_size = 80
+  const navigate = useNavigate()
 
 
   const get_user_handler = () => {
@@ -31,6 +33,15 @@ function App(props) {
     if (Cookies.get('auth_token')) {
       get_user_handler()
     }
+    else {
+      console.log('working')
+      navigate('/login')
+    }
+  }, [])
+  useEffect(() => {
+    if (window != undefined) {
+      InitializeWindowStore()
+    }
   }, [])
   return (
     <>
@@ -42,19 +53,17 @@ function App(props) {
           :
           <></>
       }
-      <BrowserRouter>
-        <Routes>
-          <Route path="" element={<Homepage />} />
-          {
-            props.user.profile ?
-              <>
-                <Route path="/:video_chat_id" element={<StreamPage />} />
-              </>
-              :
-              <Route path="/login" element={<LoginPage />} />
-          }
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="" element={<Homepage />} />
+        {
+          props.user.profile ?
+            <>
+              <Route path="/:video_chat_id" element={<StreamPage />} />
+            </>
+            :
+            <Route path="/login" element={<LoginPage />} />
+        }
+      </Routes>
     </>
   );
 }
