@@ -15,7 +15,7 @@ import { Triangle } from "react-loader-spinner"
 import Cookies from "js-cookie"
 import { createActiveVideoSocket } from "../../Constants/Sockets/ActiveVideoSocket"
 import { createVideoChatUserSocket } from "../../Constants/Sockets/VideoSocket"
-import createMyPeerConnection from "../../Constants/Stream/myPeerConnection"
+// import createMyPeerConnection from "../../Constants/Stream/myPeerConnection"
 
 
 
@@ -78,7 +78,7 @@ const StreamPage = (props) => {
                             get_user_medias(
                                 {},
                                 () => {
-                                    createMyPeerConnection()
+                                    // createMyPeerConnection()
                                 }
                             )
                             setLoading(false)
@@ -102,7 +102,6 @@ const StreamPage = (props) => {
         else {
             navigate('/login')
         }
-        console.log('auth token')
     }, [params.video_chat_id])
 
 

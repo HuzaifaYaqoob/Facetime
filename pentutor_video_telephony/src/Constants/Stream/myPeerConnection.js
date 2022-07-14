@@ -5,7 +5,6 @@ import { AddRTCPConnection } from "../../redux/actions/stream"
 const onIceCandidate = (event) => {
     const state = store.getState()
     if (event.candidate) {
-        console.log(event.candidate)
         let data = {
             type: 'ICE_CANDIDATE',
             sender: state.user.profile.user,

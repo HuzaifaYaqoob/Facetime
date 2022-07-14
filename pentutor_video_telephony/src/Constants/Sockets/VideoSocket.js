@@ -3,52 +3,55 @@ import Cookies from 'js-cookie'
 import { AddVideoSocket } from "../../redux/actions/socket"
 import { RequestFulfilled } from "../../redux/actions/stream"
 import { store } from "../.."
+import { createUserConnection } from "../Connections/userConnections"
 
 
 
 const handleNewUserRequest = async (message) => {
     console.log(message)
     const state = store.getState()
-    let socket = state.socket.video_socket
+    let socket = state.socket.active_video_socket
 
     let user_inp = window.confirm(`${message.sender.username} want to let him In, Do you want?`)
-    let data = {}
-    if (user_inp) {
-
-        await state.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(message.offer))
-
-        state.user.stream.video_stream.getVideoTracks().forEach(tr => {
-            state.stream.rtcp_connection.addTrack(tr, state.user.stream.video_stream)
-        })
-        state.user.stream.audio_stream.getAudioTracks().forEach(tr => {
-            state.stream.rtcp_connection.addTrack(tr, state.user.stream.audio_stream)
-        })
-
-
-        let answer = await state.stream.rtcp_connection.createAnswer()
-        await state.stream.rtcp_connection.setLocalDescription(answer)
-
-        data = {
-            type: 'CONNECTION_ACCEPTED',
-            message: 'Request Approved',
-            requested: message.sender,
-            answer: answer,
-            sender: state.user.profile.user
-        }
+    let data = {
+        type: user_inp ? 'CONNECTION_ACCEPTED' : 'CONNECTION_REJECTED',
+        message: user_inp ? 'Request Approved' : 'Request Canceled',
+        requested: message.sender,
+        sender: state.user.profile.user
     }
-    else {
-        data = {
-            type: 'CONNECTION_REJECTED',
-            message: 'Request Canceled',
-            requested: message.sender,
-            sender: state.user.profile.user
-        }
-    }
-
-    data = JSON.stringify(data)
-    socket.send(data)
+    socket.send(JSON.stringify(data))
 }
 
+
+const joinVideoChat = async (data, success, fail) => {
+    const state = store.getState()
+    state.video.video_chat.paticipants.map(prtcpnt => {
+        console.log(prtcpnt)
+    })
+    let my_connection = createUserConnection({ user: state.video.video_chat.host })
+
+    let vid_stream = state.user.stream.video_stream
+    let aud_stream = state.user.stream.audio_stream
+
+    vid_stream.getVideoTracks(trck => {
+        my_connection.addTrack(trck, vid_stream)
+    })
+    aud_stream.getAudioTracks(trck => {
+        my_connection.addTrack(trck, aud_stream)
+    })
+
+    let offer = await my_connection.createOffer()
+    await my_connection.setLocalDescription(offer)
+
+    let join_data = {
+        type: 'NEW_USER_JOINED_VIDEO_CHAT',
+        sender: state.user.profile.user,
+        offer: my_connection.localDescription,
+        connection_for : {}
+    }
+    state.socket.active_video_socket.send(JSON.stringify(join_data))
+    success && success()
+}
 
 const onNewMessage = async (event) => {
     const state = store.getState()
@@ -59,9 +62,13 @@ const onNewMessage = async (event) => {
         handleNewUserRequest(data)
     }
     else if (data.type === 'CONNECTION_ACCEPTED') {
-        await state.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
-        store.dispatch(
-            RequestFulfilled()
+        joinVideoChat(
+            {},
+            () => {
+                store.dispatch(
+                    RequestFulfilled()
+                )
+            }
         )
     }
     else if (data.type === 'CONNECTION_REJECTED') {
