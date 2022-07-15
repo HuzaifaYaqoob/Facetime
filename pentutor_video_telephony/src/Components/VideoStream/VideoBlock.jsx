@@ -26,7 +26,7 @@ const VideoBlock = (props) => {
                     // backgroundImage: 'url("https://images.unsplash.com/photo-1622630998477-20aa696ecb05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTgwOTN8MHwxfHNlYXJjaHw0fHxibG9jayUyMGNoYWlufGVufDB8fHx8MTY1NTk2MTkzMw&ixlib=rb-1.2.1&q=80&w=1080")'
                 }}
             >
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center p-4">
+                <div className="w-full h-full bg-gray-800 flex items-center justify-center p-4 flex-1">
                     {
                         is_vid_active ?
                             <>
