@@ -34,7 +34,6 @@ function App(props) {
       get_user_handler()
     }
     else {
-      console.log('working')
       navigate('/login')
     }
   }, [])

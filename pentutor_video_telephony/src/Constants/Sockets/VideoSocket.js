@@ -4,11 +4,11 @@ import { AddVideoSocket } from "../../redux/actions/socket"
 import { RequestFulfilled } from "../../redux/actions/stream"
 import { store } from "../.."
 import { createUserConnection } from "../Connections/userConnections"
+import { JoinVideoChatParticipants } from "../VideoChats/VideoChat"
 
 
 
 const handleNewUserRequest = async (message) => {
-    console.log(message)
     const state = store.getState()
     let socket = state.socket.active_video_socket
 
@@ -23,35 +23,6 @@ const handleNewUserRequest = async (message) => {
 }
 
 
-const joinVideoChat = async (data, success, fail) => {
-    const state = store.getState()
-    state.video.video_chat.paticipants.map(prtcpnt => {
-        console.log(prtcpnt)
-    })
-    let my_connection = createUserConnection({ user: state.video.video_chat.host })
-
-    let vid_stream = state.user.stream.video_stream
-    let aud_stream = state.user.stream.audio_stream
-
-    vid_stream.getVideoTracks(trck => {
-        my_connection.addTrack(trck, vid_stream)
-    })
-    aud_stream.getAudioTracks(trck => {
-        my_connection.addTrack(trck, aud_stream)
-    })
-
-    let offer = await my_connection.createOffer()
-    await my_connection.setLocalDescription(offer)
-
-    let join_data = {
-        type: 'NEW_USER_JOINED_VIDEO_CHAT',
-        sender: state.user.profile.user,
-        offer: my_connection.localDescription,
-        connection_for : {}
-    }
-    state.socket.active_video_socket.send(JSON.stringify(join_data))
-    success && success()
-}
 
 const onNewMessage = async (event) => {
     const state = store.getState()
@@ -62,7 +33,7 @@ const onNewMessage = async (event) => {
         handleNewUserRequest(data)
     }
     else if (data.type === 'CONNECTION_ACCEPTED') {
-        joinVideoChat(
+        JoinVideoChatParticipants(
             {},
             () => {
                 store.dispatch(

@@ -32,7 +32,7 @@ const VideoPageLoader = (props) => {
 
 
 const StreamPage = (props) => {
-    console.log(props)
+    // console.log(props.user.stream.video_stream?.getVideoTracks())
     const [loading, setLoading] = useState(true)
     const params = useParams()
     const navigate = useNavigate()
@@ -41,6 +41,7 @@ const StreamPage = (props) => {
 
 
     const get_user_medias = async (data, success, fail) => {
+
         let stream_vid, stream_aud = null
         try {
             stream_vid = await navigator.mediaDevices.getUserMedia({ video: true }) || null
@@ -75,16 +76,17 @@ const StreamPage = (props) => {
                     createActiveVideoSocket(
                         { video_id: result.id },
                         () => {
-                            get_user_medias(
-                                {},
-                                () => {
-                                    // createMyPeerConnection()
-                                }
-                            )
+
                             setLoading(false)
                         }
                     )
                 }
+                get_user_medias(
+                    {},
+                    () => {
+                        // createMyPeerConnection()
+                    }
+                )
             },
             () => {
                 setLoading(false)
