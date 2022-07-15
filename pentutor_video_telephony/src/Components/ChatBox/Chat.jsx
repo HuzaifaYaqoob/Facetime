@@ -6,7 +6,7 @@ import { connect, useDispatch } from "react-redux"
 import { MAKE_ACTIVE_TAB } from "../../redux/ActionTypes/UtilityTypes"
 import ChatMessage from "./ChatMessage"
 
-export const SidebarHeader = ({text}) => {
+export const SidebarHeader = ({ text }) => {
     const diaptch = useDispatch()
     return (
         <>
@@ -14,11 +14,11 @@ export const SidebarHeader = ({text}) => {
                 <p className="text-2xl">{text}</p>
                 <div
                     className="w-[30px] h-[30px] cursor-pointer rounded-full bg-white shadow-md flex items-center justify-center"
-                    onClick={()=>{
+                    onClick={() => {
                         diaptch({
-                            type : MAKE_ACTIVE_TAB,
+                            type: MAKE_ACTIVE_TAB,
                             payload: {
-                                tab : undefined
+                                tab: undefined
                             }
                         })
                     }}
@@ -89,13 +89,24 @@ const CHt = [
 
 const Chat = (props) => {
     const [chat_messages, setChatMessages] = useState(CHt)
+
+    const sendChatMessage = (msg) => {
+        props.socket.active_video_socket.send(
+            JSON.stringify({
+                type: 'CHAT_NEW_MESSAGE',
+                message: msg,
+                user: props.user.profile.user
+            })
+        )
+    }
+
     return (
         <>
             <div className="min-w-[400px] max-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
                 <SidebarHeader text={'Chat'} />
                 <div className="flex-1 overflow-auto px-2">
                     {
-                        chat_messages.map((msg, index) => {
+                        props.chat.chat_list.map((msg, index) => {
                             return (
                                 <ChatMessage data={msg} key={index} />
                             )
@@ -103,19 +114,7 @@ const Chat = (props) => {
                     }
                 </div>
                 <ChatInput
-                    onSendMessage={(msg) => {
-                        setChatMessages(
-                            [
-                                ...chat_messages,
-                                {
-                                    first_name: 'Danish',
-                                    last_name: 'Yaqoob',
-                                    created_at: 'just now',
-                                    message: msg
-                                }
-                            ]
-                        )
-                    }}
+                    onSendMessage={sendChatMessage}
                 />
             </div>
         </>

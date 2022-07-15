@@ -7,6 +7,7 @@ import { store } from "../.."
 import { createUserConnection } from "../Connections/userConnections"
 import { AddAnswerVideoChat, AddVideoChatParticipant } from "../VideoChats/VideoChat"
 import { REMOVE_USER_CONNECTION } from "../../redux/ActionTypes/connections"
+import { CHAT_NEW_MESSAGE } from "../../redux/ActionTypes/Chat"
 
 
 
@@ -78,6 +79,16 @@ const onNewMessage = async (e) => {
                 payload: {
                     user: data.user,
                 }
+            }
+        )
+    }
+    else if (data.type === 'CHAT_NEW_MESSAGE') {
+        let new_data = data
+        delete new_data.type
+        store.dispatch(
+            {
+                type: CHAT_NEW_MESSAGE,
+                payload: new_data
             }
         )
     }

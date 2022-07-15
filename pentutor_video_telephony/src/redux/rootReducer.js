@@ -1,6 +1,7 @@
 
 
 import { combineReducers } from "redux";
+import { ChatReducer } from "./reducer/Chat";
 import { ConnectionReducer } from "./reducer/connections";
 import SocketReducer from "./reducer/Socket";
 import { StreamReducer } from "./reducer/stream";
@@ -16,5 +17,6 @@ export default combineReducers({
     video: VideoReducer,
     stream: StreamReducer,
     socket: SocketReducer,
-    connection: ConnectionReducer
+    connection: ConnectionReducer,
+    chat: ChatReducer,
 })

@@ -1,0 +1,3 @@
+
+
+export const CHAT_NEW_MESSAGE = 'CHAT_NEW_MESSAGE'
