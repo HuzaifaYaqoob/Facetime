@@ -5,30 +5,32 @@ import { createUserConnection } from "../Connections/userConnections"
 
 export const JoinVideoChatParticipants = async (data, success, fail) => {
     const state = store.getState()
-    state.video.video_chat.paticipants.filter(mpt => mpt.username != state.user.profile.user.username).map(async pt => {
-        let my_connection = createUserConnection({ user: pt })
+    if (state.connection.connections.length < 1) {
+        state.video.video_chat.paticipants.filter(mpt => mpt.username != state.user.profile.user.username).map(async pt => {
+            let my_connection = createUserConnection({ user: pt })
 
-        let vid_stream = state.user.stream.video_stream
-        let aud_stream = state.user.stream.audio_stream
+            let vid_stream = state.user.stream.video_stream
+            let aud_stream = state.user.stream.audio_stream
 
-        vid_stream.getVideoTracks().forEach(trck => {
-            my_connection.addTrack(trck, vid_stream)
+            vid_stream.getVideoTracks().forEach(trck => {
+                my_connection.addTrack(trck, vid_stream)
+            })
+            aud_stream.getAudioTracks().forEach(trck => {
+                my_connection.addTrack(trck, aud_stream)
+            })
+
+            let offer = await my_connection.createOffer()
+            await my_connection.setLocalDescription(offer)
+
+            let join_data = {
+                type: 'NEW_USER_JOINED_VIDEO_CHAT',
+                sender: state.user.profile.user,
+                offer: my_connection.localDescription,
+                connection_for: pt
+            }
+            state.socket.active_video_socket.send(JSON.stringify(join_data))
         })
-        aud_stream.getAudioTracks().forEach(trck => {
-            my_connection.addTrack(trck, aud_stream)
-        })
-
-        let offer = await my_connection.createOffer()
-        await my_connection.setLocalDescription(offer)
-
-        let join_data = {
-            type: 'NEW_USER_JOINED_VIDEO_CHAT',
-            sender: state.user.profile.user,
-            offer: my_connection.localDescription,
-            connection_for: pt
-        }
-        state.socket.active_video_socket.send(JSON.stringify(join_data))
-    })
+    }
     success && success()
 }
 

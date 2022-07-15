@@ -32,7 +32,7 @@ const VideoPageLoader = (props) => {
 
 
 const StreamPage = (props) => {
-    // console.log(props.user.stream.video_stream?.getVideoTracks())
+    console.log(props.connection.connections)
     const [loading, setLoading] = useState(true)
     const params = useParams()
     const navigate = useNavigate()
@@ -119,7 +119,8 @@ const StreamPage = (props) => {
                         {
                             props.video.video_chat ?
                                 (props.stream.request_fulfilled ||
-                                    (props.user.profile && props.video.video_chat?.allowed_users.find(usr => usr.username == props.user.profile.user.username)) ||
+                                    // (props.user.profile && props.video.video_chat?.allowed_users.find(usr => usr.username == props.user.profile.user.username)) ||
+                                    // (props.user.profile && props.video.video_chat?.paticipants.find(usr => usr.username == props.user.profile.user.username)) ||
                                     (props.video.video_chat?.host?.username === props.user?.profile?.user?.username)) ?
                                     <div className="flex items-stretch justify-between p-2 md:p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
                                         <VideoStream />

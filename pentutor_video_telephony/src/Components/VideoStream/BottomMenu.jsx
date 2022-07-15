@@ -66,6 +66,19 @@ const MenuBlock = (props) => {
         )
     }
 
+    const LeaveMeeting = (e) => {
+        props.socket.active_video_socket.send(
+            JSON.stringify({
+                type: 'USER_LEFT_MEETING',
+                user: props.user.profile.user
+            })
+        )
+        props.connection.connections.map(cnt => {
+            cnt.rtcp.close()
+        })
+        navigate('/')
+    }
+
     return (
         <>
             <div className="md:min-h-[100px] bg-[#f1f4f9] rounded-3xl flex items-center justify-between md:justify-center gap-3 md:gap-8 py-3 px-2 md:px-8">
@@ -163,7 +176,7 @@ const MenuBlock = (props) => {
                     text='leave'
                     active={true}
                     onClick={() => {
-                        navigate('/')
+                        LeaveMeeting()
                     }}
                 />
             </div>

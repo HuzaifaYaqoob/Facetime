@@ -8,12 +8,26 @@ import BaseURL, { video_websocket_url, wsBaseURL } from "../../redux/ApiVariable
 import { useParams } from "react-router-dom"
 import Cookies from "js-cookie"
 import { AddActiveVideoSocket } from "../../redux/actions/socket"
+import ParticipantAudioComp from './ParticipantsAudio'
+import { JoinVideoChatParticipants } from "../../Constants/VideoChats/VideoChat"
+
 
 const VideoStream = (props) => {
     const params = useParams()
+
+    useEffect(() => {
+        if (props.connection.connections.length < 1) {
+            JoinVideoChatParticipants(
+                {},
+                () => {
+                }
+            )
+        }
+    }, [])
     return (
         <>
             <div className="w-full flex-1 flex flex-col gap-2 md:gap-4">
+                <ParticipantAudioComp />
                 <VideoBlock />
                 <MenuBlock />
             </div>

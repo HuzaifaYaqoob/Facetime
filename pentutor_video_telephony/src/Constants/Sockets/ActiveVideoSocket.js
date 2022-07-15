@@ -6,6 +6,7 @@ import { AddActiveVideoSocket } from "../../redux/actions/socket"
 import { store } from "../.."
 import { createUserConnection } from "../Connections/userConnections"
 import { AddAnswerVideoChat, AddVideoChatParticipant } from "../VideoChats/VideoChat"
+import { REMOVE_USER_CONNECTION } from "../../redux/ActionTypes/connections"
 
 
 
@@ -23,7 +24,7 @@ const onNewMessage = async (e) => {
             }
             catch { }
         }
-        else{
+        else {
         }
     }
 
@@ -61,6 +62,22 @@ const onNewMessage = async (e) => {
             {
                 user: data.sender,
                 answer: data.answer
+            }
+        )
+    }
+    else if (data.type === 'USER_LEFT_MEETING') {
+        let all_connections = store.getState().connection.connections
+        all_connections.map(cnt => {
+            if ((data.user.username == state.user.profile.username) || (data.user.username == cnt.user.username)) {
+                cnt.rtcp.close()
+            }
+        })
+        store.dispatch(
+            {
+                type: REMOVE_USER_CONNECTION,
+                payload: {
+                    user: data.user,
+                }
             }
         )
     }
