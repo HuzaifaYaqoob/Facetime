@@ -30,23 +30,30 @@ const onNewMessage = async (e) => {
     }
 
     else if (data.type === 'CUSTOM_OFFER' && data.user.username != state.user.profile.user.username) {
-        await state.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
+        let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)
+        if (user_connection) {
 
-        let answer = await state.stream.rtcp_connection.createAnswer()
-        await state.stream.rtcp_connection.setLocalDescription(answer)
-        let newdata = {
-            type: 'CUSTOM_ANSWER',
-            message: 'New Answer',
-            user: data.user,
-            answer: answer
+            user_connection = user_connection.rtcp
+            await user_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
+
+            let answer = await user_connection.createAnswer()
+            await user_connection.setLocalDescription(answer)
+            let newdata = {
+                type: 'CUSTOM_ANSWER',
+                message: 'New Answer',
+                user: data.user,
+                answer: answer,
+                sender: store.getState().user.profile.user
+            }
+            newdata = JSON.stringify(newdata)
+            state.socket.active_video_socket.send(newdata)
         }
-        newdata = JSON.stringify(newdata)
-        state.socket.active_video_socket.send(newdata)
-
     }
 
-    else if (data.type === 'CUSTOM_ANSWER' && data.user.username != state.user.profile.user.username) {
-        await state.stream.rtcp_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
+    else if (data.type === 'CUSTOM_ANSWER' && data.user.username == state.user.profile.user.username) {
+        let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.sender.username)?.rtcp
+
+        await user_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
     }
 
     else if (data.type === 'NEW_USER_JOINED_VIDEO_CHAT' && data.sender.username != state.user.profile.user.username && data.connection_for.username == state.user.profile.user.username) {

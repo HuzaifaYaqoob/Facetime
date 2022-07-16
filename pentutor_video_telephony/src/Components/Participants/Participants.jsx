@@ -5,7 +5,7 @@ import { SidebarHeader } from "../ChatBox/Chat"
 
 
 const User = ({ user_part, ...props }) => {
-    console.log(user_part)
+    console.log(user_part.stream.getVideoTracks())
     const rm_vid = useRef(null)
 
     useEffect(() => {

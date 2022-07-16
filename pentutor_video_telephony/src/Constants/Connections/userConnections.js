@@ -24,7 +24,26 @@ const onUserIceCandidate = (event, data, success, fail) => {
     }
 }
 
+
+const onNegotiationNeeded = async (e, data) => {
+    console.log('negociate')
+    const state = store.getState()
+    let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)?.rtcp
+
+    let offer = user_connection.createOffer()
+    await user_connection.setLocalDescription(offer)
+
+    let new_data = {
+        type: 'CUSTOM_OFFER',
+        offer: user_connection.localDescription,
+        user: state.user.profile.user
+    }
+    new_data = JSON.stringify(new_data)
+    state.socket.active_video_socket.send(new_data)
+}
+
 const onUserNewTrack = (event, data, success, fail) => {
+    console.log('new track addedd')
     let user_connection = store.getState().connection.connections.find(cnt => cnt.user.username == data.user.username)
     if (user_connection) {
         if (!user_connection.stream) {
@@ -44,6 +63,11 @@ const onUserNewTrack = (event, data, success, fail) => {
         let user_stream = store.getState().connection.connections.find(cn => cn.user.username == data.user.username)?.stream
 
         event.streams[0].getTracks().forEach(trck => {
+            if (trck.kind == 'video' && user_stream.getVideoTracks().length > 0) {
+                user_stream.getVideoTracks().forEach(t => {
+                    user_stream.removeTrack(t)
+                })
+            }
             user_stream.addTrack(trck, event.streams[0])
         })
     }
@@ -74,6 +98,7 @@ export const createUserConnection = (data, success, fail) => {
         let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)
         if (user_connection) {
             user_connection.rtcp.onicecandidate = (e) => onUserIceCandidate(e, { user: data.user })
+            user_connection.rtcp.onnegotiationneeded = (e) => onNegotiationNeeded(e, { user: data.user })
             user_connection.rtcp.ontrack = (e) => onUserNewTrack(e, { user: data.user })
         }
         return user_connection.rtcp
