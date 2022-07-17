@@ -34,7 +34,7 @@ const User = ({ user_part, ...props }) => {
                         </div>
                 }
                 <p className={`${user_part.stream?.getVideoTracks()?.find(trc => trc.enabled) ? 'absolute top-0 left-0 right-0 py-2 px-2 text-white bg-black/50 backdrop-blur-sm' : 'static'}`}>
-                    {user_part.user.username} - {user_part.user.type == 'SCREEN' && 'Screen Sharing'}
+                    {user_part.user.username}{user_part.user.type == 'SCREEN' && ' - Screen Sharing'}
                 </p>
             </div>
         </>
