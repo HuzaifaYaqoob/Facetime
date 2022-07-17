@@ -24,7 +24,7 @@ export const SidebarHeader = ({ text }) => {
                     }}
                 >
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path className="stroke-red-700" d="M11.6667 11.6667L1 1M11.6667 1L1 11.6667" stroke-width="1.33333" stroke-linecap="round" />
+                        <path className="stroke-red-700" d="M11.6667 11.6667L1 1M11.6667 1L1 11.6667" strokeWidth="1.33333" strokeLinecap="round" />
                     </svg>
                 </div>
             </div>

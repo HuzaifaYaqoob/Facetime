@@ -44,16 +44,6 @@ const onNewTrack = async (e) => {
 
 const createMyPeerConnection = (data, success, fail) => {
     let connection = new RTCPeerConnection(null)
-    store.dispatch(
-        AddRTCPConnection(
-            {
-                connection: connection
-            }
-        )
-    )
-    connection.onnegotiationneeded = (event) => onNegotiationNeeded(event, connection)
-    connection.onicecandidate = onIceCandidate
-    connection.ontrack = onNewTrack
 }
 
 export default createMyPeerConnection

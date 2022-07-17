@@ -1,4 +1,4 @@
-import { ADD_RTCP_CONNECTION, REQUEST_FULFILLED, SET_PINNED_STREAM } from "../ActionTypes/streamTypes"
+import { REQUEST_FULFILLED, SET_PINNED_STREAM } from "../ActionTypes/streamTypes"
 
 
 const initialState = {
@@ -30,11 +30,7 @@ export const StreamReducer = (state = initialState, action) => {
                 ...state,
                 request_fulfilled: true
             }
-        case ADD_RTCP_CONNECTION:
-            return {
-                ...state,
-                rtcp_connection: action.payload.connection
-            }
+
         case SET_PINNED_STREAM:
             return {
                 ...state,

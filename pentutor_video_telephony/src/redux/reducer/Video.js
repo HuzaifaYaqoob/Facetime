@@ -1,16 +1,22 @@
-import { CREATE_VIDEO_CHAT, GET_VIDEO_CHAT, SHOW_VIDEO_STREAM, VIDEO_CHAT_NOT_FOUND, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
+import { CREATE_VIDEO_CHAT, GET_VIDEO_CHAT, SHOW_VIDEO_STREAM, VIDEO_CHAT_NOT_FOUND, VIDEO_MEETING_ACCEPTED_TO_JOIN, VIDEO_MODEL_TOGGLE } from "../ActionTypes/VideoTypes"
 
 
 const initialState = {
     video: false,
     video_stream: null, // active video stream
     stream_type: null,
-    video_chat: undefined
+    video_chat: undefined,
+    video_chat_joined: false,
 }
 
 
 const VideoReducer = (state = initialState, action) => {
     switch (action.type) {
+        case VIDEO_MEETING_ACCEPTED_TO_JOIN:
+            return {
+                ...state,
+                video_chat_joined: action.payload
+            }
         case GET_VIDEO_CHAT:
             return {
                 ...state,

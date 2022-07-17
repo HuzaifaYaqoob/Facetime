@@ -46,9 +46,9 @@ const ParticipantBlock = (props) => {
                     <div className="pr-3">
                         {
                             props.connection.connections.filter(cnt => cnt.stream).length > 0 ?
-                            props.connection.connections.filter(cnt => cnt.stream).map(cnctn => {
+                            props.connection.connections.filter(cnt => cnt.stream).map((cnctn, index) => {
                                 return (
-                                    <User user_part={cnctn} {...props} />
+                                    <User user_part={cnctn} {...props} key={index} />
                                 )
                             })
                             :

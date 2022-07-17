@@ -4,7 +4,7 @@ import Chat from "../../Components/ChatBox/Chat"
 import ParticipantBlock from "../../Components/Participants/Participants"
 import VideoStream from "../../Components/VideoStream/VideoStream"
 import { addUserMedia } from "../../redux/actions/userActions"
-import { AddRTCPConnection, AddToPinnedStream, RequestFulfilled } from '../../redux/actions/stream'
+import { AddToPinnedStream, RequestFulfilled } from '../../redux/actions/stream'
 import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import { AddVideoSocket } from "../../redux/actions/socket"
 import VideoChatNotFound from "./VideoChatNotFound"
@@ -15,7 +15,6 @@ import { Triangle } from "react-loader-spinner"
 import Cookies from "js-cookie"
 import { createActiveVideoSocket } from "../../Constants/Sockets/ActiveVideoSocket"
 import { createVideoChatUserSocket } from "../../Constants/Sockets/VideoSocket"
-// import createMyPeerConnection from "../../Constants/Stream/myPeerConnection"
 
 
 
@@ -84,7 +83,6 @@ const StreamPage = (props) => {
                 get_user_medias(
                     {},
                     () => {
-                        // createMyPeerConnection()
                     }
                 )
             },
@@ -158,7 +156,6 @@ const mapDispatch = {
     AddToPinnedStream: AddToPinnedStream,
     AddVideoSocket: AddVideoSocket,
     GetVideoChat: GetVideoChat,
-    AddRTCPConnection: AddRTCPConnection,
     RequestFulfilled: RequestFulfilled
 }
 export default connect(mapState, mapDispatch)(StreamPage)

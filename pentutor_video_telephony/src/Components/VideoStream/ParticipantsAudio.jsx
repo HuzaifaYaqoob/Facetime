@@ -25,9 +25,9 @@ const ParticipantAudioComp = (props) => {
         <>
             {
                 props.connection.connections.length > 0 &&
-                props.connection.connections.map(cnctn => {
+                props.connection.connections.map((cnctn, index) => {
                     return (
-                        <AudioBlock user_part={cnctn} />
+                        <AudioBlock user_part={cnctn} key={index} />
                     )
                 })
             }

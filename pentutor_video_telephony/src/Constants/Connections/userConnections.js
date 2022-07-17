@@ -27,19 +27,21 @@ const onUserIceCandidate = (event, data, success, fail) => {
 
 const onNegotiationNeeded = async (e, data) => {
     console.log('negociate')
-    const state = store.getState()
-    let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)?.rtcp
+    // const state = store.getState()
+    // let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)?.rtcp
 
-    let offer = user_connection.createOffer()
-    await user_connection.setLocalDescription(offer)
+    // let offer = user_connection.createOffer()
+    // if(!user_connection.localDescription){
+    //     await user_connection.setLocalDescription(offer)
+    // }
 
-    let new_data = {
-        type: 'CUSTOM_OFFER',
-        offer: user_connection.localDescription,
-        user: state.user.profile.user
-    }
-    new_data = JSON.stringify(new_data)
-    state.socket.active_video_socket.send(new_data)
+    // let new_data = {
+    //     type: 'CUSTOM_OFFER',
+    //     offer: user_connection.localDescription,
+    //     user: state.user.profile.user
+    // }
+    // new_data = JSON.stringify(new_data)
+    // state.socket.active_video_socket.send(new_data)
 }
 
 const onUserNewTrack = (event, data, success, fail) => {

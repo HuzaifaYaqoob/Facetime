@@ -5,6 +5,7 @@ import { RequestFulfilled } from "../../redux/actions/stream"
 import { store } from "../.."
 import { createUserConnection } from "../Connections/userConnections"
 import { JoinVideoChatParticipants } from "../VideoChats/VideoChat"
+import { VIDEO_MEETING_ACCEPTED_TO_JOIN } from "../../redux/ActionTypes/VideoTypes"
 
 
 
@@ -33,6 +34,10 @@ const onNewMessage = async (event) => {
         handleNewUserRequest(data)
     }
     else if (data.type === 'CONNECTION_ACCEPTED') {
+        store.dispatch({
+            type: VIDEO_MEETING_ACCEPTED_TO_JOIN,
+            payload: true
+        })
         JoinVideoChatParticipants(
             {},
             () => {
@@ -46,12 +51,6 @@ const onNewMessage = async (event) => {
         alert('You are not allowed')
         window.location.href = '/'
     }
-    else if (data.type === 'ICE_CANDIDATE') {
-        try {
-            state.stream.rtcp_connection.addIceCandidate(data.candidate)
-        }
-        catch { }
-    }
 }
 
 const socketOnClose = () => {
@@ -64,6 +63,13 @@ export const createVideoChatUserSocket = (data, success, fail) => {
     let socket = new WebSocket(wsBaseURL + video_websocket_url + data.video_id + `/?token=${Cookies.get('auth_token')}`)
 
     socket.onopen = (event) => {
+        let new_state = store.getState()
+        if (new_state.user.profile.user.username == new_state.video.video_chat.host.username) {
+            store.dispatch({
+                type: VIDEO_MEETING_ACCEPTED_TO_JOIN,
+                payload: true
+            })
+        }
         store.dispatch(
             AddVideoSocket(
                 {

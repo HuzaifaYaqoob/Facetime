@@ -16,14 +16,14 @@ const VideoStream = (props) => {
     const params = useParams()
 
     useEffect(() => {
-        if (props.connection.connections.length < 1) {
+        if (props.connection.connections.length < 1 && props.user.stream.video_stream && props.user.stream.audio_stream) {
             JoinVideoChatParticipants(
                 {},
                 () => {
                 }
             )
         }
-    }, [])
+    }, [props.user.stream.video_stream, props.user.stream.audio_stream])
     return (
         <>
             <div className="w-full flex-1 flex flex-col gap-2 md:gap-4">

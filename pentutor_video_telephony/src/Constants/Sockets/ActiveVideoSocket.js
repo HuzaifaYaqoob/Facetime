@@ -17,6 +17,9 @@ import { CHAT_NEW_MESSAGE } from "../../redux/ActionTypes/Chat"
 const onNewMessage = async (e) => {
     const state = store.getState()
     let data = JSON.parse(e.data)
+    if (!store.getState().video.video_chat_joined) {
+        return
+    }
     if (data.type === 'ICE_CANDIDATE' && data.sender.username != state.user.profile.user.username) {
         let connection = store.getState().connection.connections.find(cnt => cnt.user.username == data.sender.username)
         if (connection && connection.rtcp) {
