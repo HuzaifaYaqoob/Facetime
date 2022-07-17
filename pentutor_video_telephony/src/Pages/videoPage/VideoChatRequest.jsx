@@ -19,7 +19,6 @@ const VideoChatRequest = (props) => {
 
     useEffect(() => {
         if (user_video.current) {
-            console.log('caling')
             user_video.current.srcObject = props.user.stream.video_stream
             user_video.current.play()
         }

@@ -3,7 +3,6 @@ import Cookies from 'js-cookie'
 import { AddVideoSocket } from "../../redux/actions/socket"
 import { RequestFulfilled } from "../../redux/actions/stream"
 import { store } from "../.."
-import { createUserConnection } from "../Connections/userConnections"
 import { JoinVideoChatParticipants } from "../VideoChats/VideoChat"
 import { VIDEO_MEETING_ACCEPTED_TO_JOIN } from "../../redux/ActionTypes/VideoTypes"
 
@@ -39,7 +38,7 @@ const onNewMessage = async (event) => {
             payload: true
         })
         JoinVideoChatParticipants(
-            {},
+            {type : 'CAM'},
             () => {
                 store.dispatch(
                     RequestFulfilled()

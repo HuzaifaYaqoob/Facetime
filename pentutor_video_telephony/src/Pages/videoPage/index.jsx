@@ -31,7 +31,7 @@ const VideoPageLoader = (props) => {
 
 
 const StreamPage = (props) => {
-    console.log(props.connection.connections)
+    // console.log(props.connection.connections)
     const [loading, setLoading] = useState(true)
     const params = useParams()
     const navigate = useNavigate()

@@ -1,7 +1,6 @@
 
 
 import { store } from "../.."
-import { createUserConnection } from "../Connections/userConnections"
 
 
 export const ask_to_join_handler = async (data, success, fail) => {
@@ -19,5 +18,3 @@ export const ask_to_join_handler = async (data, success, fail) => {
         alert('something went wrong')
     }
 }
-
-

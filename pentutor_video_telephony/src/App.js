@@ -21,14 +21,11 @@ function App(props) {
   const loading_size = 80
   const navigate = useNavigate()
 
-  console.log(props.video.video_chat_joined)
-
   const get_user_handler = () => {
     props.get_user(
       {},
     )
   }
-
 
   useEffect(() => {
     if (Cookies.get('auth_token')) {

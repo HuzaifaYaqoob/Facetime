@@ -4,14 +4,10 @@ import { video_websocket_url, wsBaseURL } from "../../redux/ApiVariables"
 import Cookies from "js-cookie"
 import { AddActiveVideoSocket } from "../../redux/actions/socket"
 import { store } from "../.."
-import { createUserConnection } from "../Connections/userConnections"
 import { AddAnswerVideoChat, AddVideoChatParticipant } from "../VideoChats/VideoChat"
 import { REMOVE_USER_CONNECTION } from "../../redux/ActionTypes/connections"
 import { CHAT_NEW_MESSAGE } from "../../redux/ActionTypes/Chat"
-
-
-
-
+import { add_new_screen_share_connection, screen_share_response_answer } from "../Connections/screenShareCon"
 
 
 const onNewMessage = async (e) => {
@@ -21,7 +17,10 @@ const onNewMessage = async (e) => {
         return
     }
     if (data.type === 'ICE_CANDIDATE' && data.sender.username != state.user.profile.user.username) {
-        let connection = store.getState().connection.connections.find(cnt => cnt.user.username == data.sender.username)
+        let connection = store.getState().connection.connections.find(cnt =>
+        (cnt.user.username == data.sender.username,
+            cnt.user.type == 'CAM')
+        )
         if (connection && connection.rtcp) {
             try {
                 connection.rtcp.addIceCandidate(data.candidate)
@@ -31,39 +30,81 @@ const onNewMessage = async (e) => {
         else {
         }
     }
-
-    else if (data.type === 'CUSTOM_OFFER' && data.user.username != state.user.profile.user.username) {
-        let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)
-        if (user_connection) {
-
-            user_connection = user_connection.rtcp
-            await user_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
-
-            let answer = await user_connection.createAnswer()
-            await user_connection.setLocalDescription(answer)
-            let newdata = {
-                type: 'CUSTOM_ANSWER',
-                message: 'New Answer',
-                user: data.user,
-                answer: answer,
-                sender: store.getState().user.profile.user
+    else if (data.type === 'SCREEN_ICE_CANDIDATE' && data.sender.username != state.user.profile.user.username) {
+        let connection = store.getState().connection.connections.find(cnt =>
+        (cnt.user.username == data.sender.username,
+            cnt.user.type == 'SCREEN')
+        )
+        console.log('this is connection ', connection)
+        if (connection && connection.rtcp) {
+            try {
+                connection.rtcp.addIceCandidate(data.candidate)
+                console.log('ICE CANDIDATE ERROR : ************')
             }
-            newdata = JSON.stringify(newdata)
-            state.socket.active_video_socket.send(newdata)
+            catch {
+            }
+        }
+        else {
         }
     }
 
-    else if (data.type === 'CUSTOM_ANSWER' && data.user.username == state.user.profile.user.username) {
-        let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.sender.username)?.rtcp
+    else if (data.type === 'CUSTOM_OFFER' && data.user.username != state.user.profile.user.username) {
+        // let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.user.username)
+        let user_connections = store.getState().connection.connections.filter(cnction => cnction.user.username == data.user.username)
+        user_connections.map(async user_connection => {
+            if (user_connection) {
+                user_connection = user_connection.rtcp
+                if (!user_connection.remoteDescription) {
+                    await user_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
 
-        await user_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
+                    let answer = await user_connection.createAnswer()
+                    await user_connection.setLocalDescription(answer)
+                    let newdata = {
+                        type: 'CUSTOM_ANSWER',
+                        message: 'New Answer',
+                        user: data.user,
+                        answer: answer,
+                        sender: store.getState().user.profile.user
+                    }
+                    newdata = JSON.stringify(newdata)
+                    state.socket.active_video_socket.send(newdata)
+                }
+            }
+        })
+    }
+
+    else if (data.type === 'CUSTOM_ANSWER' && data.user.username == state.user.profile.user.username) {
+        // let user_connection = store.getState().connection.connections.find(cnction => cnction.user.username == data.sender.username)?.rtcp
+        let user_connections = store.getState().connection.connections.filter(cnction => cnction.user.username == data.sender.username)?.rtcp
+        user_connections.map(async user_connection => {
+            if (!user_connection.remoteDescription) {
+                await user_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
+            }
+        })
     }
 
     else if (data.type === 'NEW_USER_JOINED_VIDEO_CHAT' && data.sender.username != state.user.profile.user.username && data.connection_for.username == state.user.profile.user.username) {
         AddVideoChatParticipant(
             {
                 user: data.sender,
-                offer: data.offer
+                offer: data.offer,
+            }
+        )
+    }
+
+    else if (data.type === 'SCREEN_SHARE_NEW_CONNECTION' && data.sender.username != state.user.profile.user.username && data.send_to.username == state.user.profile.user.username) {
+        add_new_screen_share_connection(
+            {
+                user: data.sender,
+                offer: data.offer,
+            }
+        )
+    }
+    else if (data.type === 'SCREEN_SHARE_NEW_CONNECTION_ANSWER' && data.sender.username != state.user.profile.user.username && data.answer_for.username == state.user.profile.user.username) {
+        screen_share_response_answer(
+            {
+                user: data.sender,
+                answer: data.answer,
             }
         )
     }

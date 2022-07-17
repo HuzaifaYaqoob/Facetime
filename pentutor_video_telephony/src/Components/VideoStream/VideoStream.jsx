@@ -18,7 +18,7 @@ const VideoStream = (props) => {
     useEffect(() => {
         if (props.connection.connections.length < 1 && props.user.stream.video_stream && props.user.stream.audio_stream) {
             JoinVideoChatParticipants(
-                {},
+                {type : 'CAM'},
                 () => {
                 }
             )

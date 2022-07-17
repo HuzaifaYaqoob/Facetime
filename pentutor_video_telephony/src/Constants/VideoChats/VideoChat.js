@@ -1,11 +1,12 @@
 import { store } from "../.."
-import { createUserConnection } from "../Connections/userConnections"
+import { createUserConnection, onNegotiationNeeded } from "../Connections/userConnections"
 
 
 
 export const JoinVideoChatParticipants = async (data, success, fail) => {
     const state = store.getState()
     state.video.video_chat.paticipants.filter(mpt => mpt.username != state.user.profile.user.username).map(async pt => {
+        pt.type = data.type
         let my_connection = createUserConnection({ user: pt })
 
         let vid_stream = state.user.stream.video_stream
@@ -19,10 +20,12 @@ export const JoinVideoChatParticipants = async (data, success, fail) => {
         })
 
         let offer = await my_connection.createOffer()
-        if(!my_connection.localDescription){
+        if (!my_connection.localDescription) {
             await my_connection.setLocalDescription(offer)
         }
-        console.log(my_connection.localDescription)
+        if (!my_connection.onnegotiationneeded) {
+            my_connection.onnegotiationneeded = (e) => onNegotiationNeeded(e, { user: pt })
+        }
 
         let join_data = {
             type: 'NEW_USER_JOINED_VIDEO_CHAT',
@@ -40,6 +43,7 @@ export const JoinVideoChatParticipants = async (data, success, fail) => {
 export const AddVideoChatParticipant = async (data, success, fail) => {
     const state = store.getState()
 
+    data.user.type = data.type ? data.type : 'CAM'
     let my_connection = createUserConnection({ user: data.user })
 
     await my_connection.setRemoteDescription(new RTCSessionDescription(data.offer))
@@ -62,6 +66,9 @@ export const AddVideoChatParticipant = async (data, success, fail) => {
         await my_connection.setLocalDescription(answer)
     }
 
+    if (!my_connection.onnegotiationneeded) {
+        my_connection.onnegotiationneeded = (e) => onNegotiationNeeded(e, { user: data.user })
+    }
     let join_data = {
         type: 'NEW_USER_JOINED_VIDEO_CHAT_APPROVED',
         sender: state.user.profile.user,
@@ -75,14 +82,16 @@ export const AddVideoChatParticipant = async (data, success, fail) => {
 
 export const AddAnswerVideoChat = async (data, success, fail) => {
     const state = store.getState()
-
+    data.user.type = data.type ? data.type : 'CAM'
     let my_connection = createUserConnection({ user: data.user })
     if (my_connection.remoteDescription) {
     }
     else {
         await my_connection.setRemoteDescription(new RTCSessionDescription(data.answer))
     }
-
+    if (!my_connection.onnegotiationneeded) {
+        my_connection.onnegotiationneeded = (e) => onNegotiationNeeded(e, { user: data.user })
+    }
     success && success()
 }
 

@@ -4,6 +4,7 @@ import { addUserMedia } from "../../redux/actions/userActions"
 import { MakeActiveTab } from '../../redux/actions/Utility'
 import { AddToPinnedStream } from "../../redux/actions/stream"
 import { useNavigate } from "react-router-dom"
+import { ShareScreenConnection } from "../../Constants/Connections/screenShareCon"
 
 
 const MenuBlock = (props) => {
@@ -39,11 +40,6 @@ const MenuBlock = (props) => {
 
     const share_screen_handler = async () => {
         const screen_stream = await navigator.mediaDevices.getDisplayMedia()
-        props.connection.connections.map(cnt =>{
-            screen_stream.getTracks().forEach(tr => {
-                cnt.rtcp.addTrack(tr, screen_stream)
-            })
-        })
 
         screen_stream.oninactive = () => {
             props.AddToPinnedStream(
@@ -62,6 +58,7 @@ const MenuBlock = (props) => {
                 pinned_stream: screen_stream
             }
         )
+        ShareScreenConnection()
     }
 
     const LeaveMeeting = (e) => {

@@ -5,11 +5,14 @@ import { SidebarHeader } from "../ChatBox/Chat"
 
 
 const User = ({ user_part, ...props }) => {
-    console.log(user_part.stream.getVideoTracks())
+    console.log(user_part.user.type, ' ', user_part.stream.getVideoTracks())
     const rm_vid = useRef(null)
 
     useEffect(() => {
         if (rm_vid.current) {
+            user_part.stream.getVideoTracks().forEach(element => {
+                console.log(element.enabled)
+            })
             rm_vid.current.srcObject = user_part.stream
             rm_vid.current.play()
         }
@@ -30,7 +33,9 @@ const User = ({ user_part, ...props }) => {
                             {user_part.user.username[0]}
                         </div>
                 }
-                <p className={`${user_part.stream?.getVideoTracks()?.find(trc => trc.enabled) ? 'absolute top-0 left-0 right-0 py-2 px-2 text-white bg-black/50 backdrop-blur-sm' : 'static'}`}>{user_part.user.username}</p>
+                <p className={`${user_part.stream?.getVideoTracks()?.find(trc => trc.enabled) ? 'absolute top-0 left-0 right-0 py-2 px-2 text-white bg-black/50 backdrop-blur-sm' : 'static'}`}>
+                    {user_part.user.username} - {user_part.user.type == 'SCREEN' && 'Screen Sharing'}
+                </p>
             </div>
         </>
     )
@@ -46,15 +51,15 @@ const ParticipantBlock = (props) => {
                     <div className="pr-3">
                         {
                             props.connection.connections.filter(cnt => cnt.stream).length > 0 ?
-                            props.connection.connections.filter(cnt => cnt.stream).map((cnctn, index) => {
-                                return (
-                                    <User user_part={cnctn} {...props} key={index} />
-                                )
-                            })
-                            :
-                            <div className="text-center">
-                                <p className="text-gray-500">No Participant</p>
-                            </div>
+                                props.connection.connections.filter(cnt => cnt.stream).map((cnctn, index) => {
+                                    return (
+                                        <User user_part={cnctn} {...props} key={index} />
+                                    )
+                                })
+                                :
+                                <div className="text-center">
+                                    <p className="text-gray-500">No Participant</p>
+                                </div>
                         }
                     </div>
                 </div>
