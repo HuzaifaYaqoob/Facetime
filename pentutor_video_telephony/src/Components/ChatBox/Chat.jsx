@@ -102,7 +102,7 @@ const Chat = (props) => {
 
     return (
         <>
-            <div className="min-w-[400px] max-w-[400px] bg-[#eef2f8] rounded-3xl p-3 flex flex-col gap-3">
+            <div className="fixed top-0 left-0 right-0 bottom-0 lg:relative w-full lg:min-w-[400px] lg:max-w-[400px] bg-[#eef2f8] lg:rounded-3xl p-3 flex flex-col gap-3">
                 <SidebarHeader text={'Chat'} />
                 <div className="flex-1 overflow-auto px-2">
                     {

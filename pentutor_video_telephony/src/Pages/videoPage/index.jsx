@@ -147,6 +147,7 @@ const StreamPage = (props) => {
                                     (props.video.video_chat?.host?.username === props.user?.profile?.user?.username)) ?
                                     <div className="flex items-stretch justify-between p-2 md:p-4 min-h-screen max-h-screen overflow-hidden h-screen gap-4">
                                         <VideoStream />
+
                                         {
                                             props.utility.active_sidetab && props.utility.active_sidetab === 'CHAT' &&
                                             <>

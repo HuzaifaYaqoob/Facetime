@@ -124,6 +124,13 @@ const onNewMessage = async (e) => {
                 cnt.rtcp.close()
             }
         })
+        store.dispatch({
+            type: 'ADD_OR_REMOVE_SNACK_BAR',
+            payload: {
+                message: `${data.user.username} has left the meeting`,
+                type: 'info'
+            }
+        })
         store.dispatch(
             {
                 type: REMOVE_USER_CONNECTION,

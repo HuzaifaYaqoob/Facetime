@@ -30,8 +30,8 @@ const VideoChatRequest = (props) => {
     return (
         <>
             <div className="flex items-center justify-center min-h-screen ">
-                <div className="flex items-center justify-between max-w-6xl w-full gap-5">
-                    <div className="flex-1 h-[400px] relative bg-gray-900 rounded-md">
+                <div className="flex items-center justify-between flex-col md:flex-row max-w-6xl w-full gap-5 px-2">
+                    <div className="flex-1 flex items-center justify-center h-[400px] relative bg-gray-900 rounded-md">
                         {
                             props.user.stream.video_stream ?
                                 <>
