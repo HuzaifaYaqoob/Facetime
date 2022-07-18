@@ -47,11 +47,11 @@ const MenuBlock = (props) => {
         try {
             screen_stream = await navigator.mediaDevices.getDisplayMedia()
         }
-        catch {
+        catch (err) {
             dispatch({
                 type: 'ADD_OR_REMOVE_SNACK_BAR',
                 payload: {
-                    message: 'Could not share screen, Somthing went wrong',
+                    message: `Could not share screen, ${err}`,
                     type: 'error'
                 }
             })
