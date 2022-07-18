@@ -42,26 +42,41 @@ const MenuBlock = (props) => {
     }
 
     const share_screen_handler = async () => {
-        const screen_stream = await navigator.mediaDevices.getDisplayMedia()
+        const screen_stream = null
 
-        screen_stream.oninactive = () => {
-            props.AddToPinnedStream(
+        try {
+            screen_stream = await navigator.mediaDevices.getDisplayMedia()
+        }
+        catch {
+            dispatch({
+                type: 'ADD_OR_REMOVE_SNACK_BAR',
+                payload: {
+                    message: 'Could not share screen, Somthing went wrong',
+                    type: 'error'
+                }
+            })
+        }
+
+        if (screen_stream) {
+            screen_stream.oninactive = () => {
+                props.AddToPinnedStream(
+                    {
+                        pinned_stream: (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) ? props.user.stream.video_stream : null
+                    }
+                )
+            }
+            props.addUserMedia(
                 {
-                    pinned_stream: (props.user.stream.video_stream && props.user.stream.video_stream.getVideoTracks()[0].enabled) ? props.user.stream.video_stream : null
+                    screen_share: screen_stream,
                 }
             )
+            props.AddToPinnedStream(
+                {
+                    pinned_stream: screen_stream
+                }
+            )
+            ShareScreenConnection()
         }
-        props.addUserMedia(
-            {
-                screen_share: screen_stream,
-            }
-        )
-        props.AddToPinnedStream(
-            {
-                pinned_stream: screen_stream
-            }
-        )
-        ShareScreenConnection()
     }
 
     const LeaveMeeting = (e) => {
