@@ -138,6 +138,7 @@ const MenuBlock = (props) => {
                     active={props.user.stream.audio_stream?.getAudioTracks()[0].enabled}
                 />
                 <MenuIcon
+                    className='hidden md:block'
                     icon={
                         <>
                             <svg className="w-[20px] h-[17px] md:w-[28px] md:h-[26px]" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
