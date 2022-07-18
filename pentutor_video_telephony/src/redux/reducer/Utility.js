@@ -10,12 +10,20 @@ const initialState = {
     loading: false,
     requesting: false,
     snack_bar: undefined,
-    is_message: false
+    is_message: false,
+    recording: false,
+    recording_available: false
 }
 
 
 const UtilityReducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'TOGGLE_RECORDING':
+            return {
+                ...state,
+                recording: action.payload,
+                recording_available: !action.payload,
+            }
         case 'ON_CHAT_NEW_MESSAGE':
             return {
                 ...state,

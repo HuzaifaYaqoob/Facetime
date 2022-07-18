@@ -133,6 +133,12 @@ const StreamPage = (props) => {
     return (
         <>
             {
+                props.utility.recording &&
+                <div className="fixed bg-red-600 rounded-md p-2 text-white z-20 top-4 left-1/2 -translate-x-1/2">
+                    Recording...
+                </div>
+            }
+            {
                 loading ?
                     <>
                         <VideoPageLoader />

@@ -6,6 +6,7 @@ import { AddToPinnedStream } from "../../redux/actions/stream"
 import { useNavigate } from "react-router-dom"
 import { ShareScreenConnection } from "../../Constants/Connections/screenShareCon"
 import { useState } from "react"
+import { DownloadRecording, startRecording, stopRecording } from "../../Constants/MediaRecording/MediaRecording"
 
 
 const MenuBlock = (props) => {
@@ -99,6 +100,16 @@ const MenuBlock = (props) => {
             }
         })
         navigate('/')
+    }
+
+    const meeting_recording_handler = (e) => {
+        if (props.utility.recording) {
+            stopRecording()
+        }
+        else {
+            startRecording()
+        }
+        setMoreDropDown(false)
     }
 
     return (
@@ -215,9 +226,35 @@ const MenuBlock = (props) => {
                     {
                         more_dropdown &&
                         <div className="bg-white max-w-[250px] w-[250px] rounded-md p-1 absolute bottom-full right-0 shadow-md">
-                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md mb-2 text-[#2f3f69]">
-                                Record Meeting
-                            </div>
+                            {
+                                props.user.profile.user.username == props.video.video_chat.host.username &&
+                                <>
+                                    <div
+                                        className="py-2 px-3 hidden md:block hover:bg-gray-100 cursor-pointer rounded-md mb-2 text-[#2f3f69]"
+                                        onClick={meeting_recording_handler}
+                                    >
+                                        {
+                                            props.utility.recording ?
+                                                'Stop Recording'
+                                                :
+                                                'Start Recording'
+                                        }
+                                    </div>
+                                    {
+
+                                        props.utility.recording_available &&
+                                        <div
+                                            className="py-2 px-3 hidden md:block hover:bg-gray-100 cursor-pointer rounded-md mb-2 text-[#2f3f69]"
+                                            onClick={() => {
+                                                setMoreDropDown(false)
+                                                DownloadRecording()
+                                            }}
+                                        >
+                                            Download Recording
+                                        </div>
+                                    }
+                                </>
+                            }
                             <div
                                 className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md text-red-600"
                                 onClick={() => {
