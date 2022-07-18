@@ -9,7 +9,10 @@ const MenuIcon = ({ text, color, icon, onClick, active, className, badge }) => {
                     onClick={onClick}
                 >
                     {icon}
-                    <span className="block w-[5px] h-[5px] rounded-full bg-orange-400 absolute top-1 right-1"></span>
+                    {
+                        badge &&
+                        <span className="block w-[5px] h-[5px] rounded-full bg-orange-400 absolute top-1 right-1"></span>
+                    }
                 </div>
                 <span className={`text-center capitalize text-xs md:text-md md:block hidden`}>{text}</span>
             </div>
@@ -23,7 +26,7 @@ MenuIcon.defaultProps = {
     color: 'text-gray-900',
     onClick: () => { },
     active: true,
-    badge : false,
+    badge: false,
 }
 
 export default MenuIcon
