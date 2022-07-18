@@ -3,8 +3,8 @@
 import Homepage from "./Pages/Homepage";
 import StreamPage from "./Pages/videoPage";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-
-import { connect } from "react-redux";
+import SnackBar from 'my-react-snackbar';
+import { connect, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 
 import { useEffect } from "react";
@@ -20,6 +20,7 @@ import InitializeWindowStore from "./Constants/storeConstants";
 function App(props) {
   const loading_size = 80
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const get_user_handler = () => {
     props.get_user(
@@ -32,6 +33,13 @@ function App(props) {
       get_user_handler()
     }
     else {
+      dispatch({
+        type: 'ADD_OR_REMOVE_SNACK_BAR',
+        payload: {
+          message: 'Login is Required',
+          type: 'info'
+        }
+      })
       navigate('/login')
     }
   }, [])
@@ -40,6 +48,16 @@ function App(props) {
       InitializeWindowStore()
     }
   }, [])
+  useEffect(() => {
+    if (props.utility.snack_bar) {
+      setTimeout(() => {
+        dispatch({
+          type: 'ADD_OR_REMOVE_SNACK_BAR',
+          payload: undefined
+        })
+      }, 4000)
+    }
+  }, [props.utility.snack_bar])
   return (
     <>
       {
@@ -49,6 +67,19 @@ function App(props) {
           </div>
           :
           <></>
+      }
+      {
+        props.utility.snack_bar &&
+        <div>
+          <SnackBar
+            open={true}
+            message={props.utility.snack_bar.message}
+            position='bottom-left'
+            type={props.utility.snack_bar.type}
+            yesLabel=''
+            onYes={() => { }}
+          />
+        </div>
       }
       <Routes>
         <Route path="" element={<Homepage />} />

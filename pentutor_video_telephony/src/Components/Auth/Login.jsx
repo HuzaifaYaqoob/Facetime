@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import { LoginHandler } from "../../redux/actions/Auth"
 import Cookies from 'js-cookie'
 import { useNavigate } from "react-router-dom"
@@ -8,16 +8,30 @@ import { useNavigate } from "react-router-dom"
 const Login = (props) => {
     const [login_data, setLoginData] = useState({})
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const LoginHandler = () => {
         props.LoginHandler(
             login_data,
             (result) => {
                 Cookies.set('auth_token', result.access_token, { expires: 45 })
+                dispatch({
+                    type: 'ADD_OR_REMOVE_SNACK_BAR',
+                    payload: {
+                        message: 'Login Successful',
+                        type: 'success'
+                    }
+                })
                 navigate('/')
             },
             () => {
-                alert('fial')
+                dispatch({
+                    type: 'ADD_OR_REMOVE_SNACK_BAR',
+                    payload: {
+                        message: 'Authentication Fail',
+                        type: 'error'
+                    }
+                })
             }
         )
     }

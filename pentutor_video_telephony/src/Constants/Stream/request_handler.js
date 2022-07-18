@@ -15,6 +15,9 @@ export const ask_to_join_handler = async (data, success, fail) => {
         success && success()
     }
     else {
-        alert('something went wrong')
+        store.dispatch({
+            type: 'CHANGE_REQUESTING_STATUS',
+            payload: false
+        })
     }
 }

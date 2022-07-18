@@ -48,6 +48,17 @@ const StreamPage = (props) => {
         try {
             stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true }) || null
         } catch { }
+
+        if (!stream_vid || !stream_aud) {
+            dispatch({
+                type: 'ADD_OR_REMOVE_SNACK_BAR',
+                payload: {
+                    message: 'Media is required to joing this meeting. \n You can disable later',
+                    type: 'warning'
+                }
+            })
+            navigate('/')
+        }
         props.addUserMedia(
             {
                 video_stream: stream_vid,
@@ -88,6 +99,13 @@ const StreamPage = (props) => {
             },
             () => {
                 setLoading(false)
+                dispatch({
+                    type: 'ADD_OR_REMOVE_SNACK_BAR',
+                    payload: {
+                        message: 'Video Chat not found or something went wrong',
+                        type: 'error'
+                    }
+                })
                 navigate('/')
             }
         )
@@ -100,6 +118,13 @@ const StreamPage = (props) => {
             }
         }
         else {
+            dispatch({
+                type: 'ADD_OR_REMOVE_SNACK_BAR',
+                payload: {
+                    message: 'Login is Required to access this page',
+                    type: 'warning'
+                }
+            })
             navigate('/login')
         }
     }, [params.video_chat_id])

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Triangle } from "react-loader-spinner"
-import { connect, useSelector } from "react-redux"
+import { connect, useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { ask_to_join_handler } from "../../Constants/Stream/request_handler"
 import { AddActiveVideoSocket, AddVideoSocket } from "../../redux/actions/socket"
@@ -14,6 +14,7 @@ const VideoChatRequest = (props) => {
     const user_video = useRef()
     const params = useParams()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
 
@@ -84,14 +85,29 @@ const VideoChatRequest = (props) => {
                         </div>
                     </div>
                     <div className="flex-1">
-                        <h3 className="text-center text-4xl mb-4 capitalize">{props.video.video_chat?.name}</h3>
+                        <h3 className="text-center text-4xl mb-4 capitalize">
+                            {
+                                props.utility.requesting ?
+                                    'Asking to Join...'
+                                    :
+                                    'Ready to Join?'
+                            }
+                        </h3>
                         {
-                            props.socket.video_socket ?
+                            props.utility.requesting &&
+                            <p className="text-center text-gray-600">You'll join the call when someone let's you in</p>
+                        }
+                        {
+                            props.socket.video_socket && !props.utility.requesting ?
                                 <div className="flex items-center gap-3 w-full justify-center">
                                     <div
                                         className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-900 active:bg-indigo-600 text-white cursor-pointer"
                                         onClick={() => {
                                             if (!props.requested) {
+                                                dispatch({
+                                                    type: 'CHANGE_REQUESTING_STATUS',
+                                                    payload: true
+                                                })
                                                 ask_to_join_handler()
                                             }
                                         }}

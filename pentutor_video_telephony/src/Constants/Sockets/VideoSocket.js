@@ -47,7 +47,13 @@ const onNewMessage = async (event) => {
         )
     }
     else if (data.type === 'CONNECTION_REJECTED') {
-        alert('You are not allowed')
+        store.dispatch({
+            type : 'ADD_OR_REMOVE_SNACK_BAR',
+            payload : {
+              message : 'Host rejected you to join this meeting',
+              type : 'info'
+            }
+          })
         window.location.href = '/'
     }
 }

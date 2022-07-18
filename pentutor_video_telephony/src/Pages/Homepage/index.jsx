@@ -45,7 +45,13 @@ const Homepage = (props) => {
                     type: 'LOADER',
                     payload: false
                 })
-                alert('fail')
+                dispatch({
+                    type: 'ADD_OR_REMOVE_SNACK_BAR',
+                    payload: {
+                        message: 'Something went wrong while creating new meeting',
+                        type: 'info'
+                    }
+                })
             }
         )
     }
@@ -61,9 +67,9 @@ const Homepage = (props) => {
     }, [])
     return (
         <>
-            <div className="flex items-center justify-center h-screen">
-                <div>
-                    <h3 className="text-4xl text-center mb-2 text-gray-900">Premium video meeting now free <br />for everyone</h3>
+            <div className="flex items-center p-3 sm:p-0 justify-center md:justify-between flex-col md:flex-row h-screen max-w-5xl mx-auto gap-10">
+                <div className="md:flex-1">
+                    <h3 className="text-4xl text-center mb-2 text-gray-900">Premium video meeting now free for everyone</h3>
                     <p className="text-center text-gray-600">We built for students, Teachers and Businesses to make it free and available for all.</p>
                     {
                         login_loading ?
@@ -73,9 +79,9 @@ const Homepage = (props) => {
                             :
                             props.user.profile ?
                                 <>
-                                    <div className="flex items-stretch justify-center gap-3 my-8">
+                                    <div className="flex items-stretch justify-center flex-col-reverse sm:flex-row gap-3 my-8">
                                         <div
-                                            className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center"
+                                            className="px-3 py-2 rounded-md bg-[#fcc20f] transition-all hover:bg-[#2f3f69] text-white cursor-pointer text-center"
                                             onClick={() => {
                                                 new_meeting_handler()
                                             }}
@@ -83,7 +89,7 @@ const Homepage = (props) => {
                                         <div>
                                             <input
                                                 type="text" placeholder="Enter Link"
-                                                className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-indigo-600"
+                                                className="h-full block w-full px-4 py-2 outline-none border-2 border-gray-200 rounded-md focus:border-[#2f3f69]"
                                                 onChange={(e) => {
                                                     setUrl(e.target.value)
                                                 }}
@@ -92,7 +98,7 @@ const Homepage = (props) => {
                                         {
                                             url &&
                                             <div
-                                                className="px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer text-center"
+                                                className="px-3 py-2 rounded-md bg-[#2f3f69] hover:bg-[#2f3f69] text-white cursor-pointer text-center"
                                                 onClick={() => {
                                                     navigate(`/${url}`)
                                                 }}
@@ -104,16 +110,24 @@ const Homepage = (props) => {
                                 <div className="flex items-center justify-center gap-5 mt-8">
                                     <Link to={'/login'}>
                                         <div
-                                            className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white max-w-max cursor-pointer text-lg"
+                                            className="px-4 py-2 rounded-full bg-[#2f3f69] hover:bg-[#2f3f69] text-white max-w-max cursor-pointer text-lg"
                                         >Login</div>
                                     </Link>
                                     <a href={'https://pentutor.com'} target='_blank'>
                                         <div
-                                            className="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white max-w-max cursor-pointer text-lg"
+                                            className="px-4 py-2 rounded-full bg-[#2f3f69] hover:bg-[#2f3f69] text-white max-w-max cursor-pointer text-lg"
                                         >Register</div>
                                     </a>
                                 </div>
                     }
+                </div>
+                <div
+                    className="max-w-[500px] w-[90%] md:flex-1 rounded-lg overflow-hidden bg-gray-100 h-[350px] bg-center bg-cover bg-no-repeat"
+                    style={{
+                        backgroundImage: `url('${process.env.PUBLIC_URL}/images/bg.png')`
+                    }}
+                >
+
                 </div>
             </div>
         </>

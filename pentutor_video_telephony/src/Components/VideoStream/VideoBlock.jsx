@@ -41,8 +41,10 @@ const VideoBlock = (props) => {
                             </>
                     }
                     <div className={`${is_vid_active ? 'absolute top-5 left-5 flex items-center justify-start gap-2' : 'static'}`}>
-                        <div className={`${is_vid_active ? 'w-[45px] h-[45px]' : 'w-[120px] h-[120px] mb-5'} transition-all rounded-full bg-gray-400 mx-auto `}>
-
+                        <div className={`${is_vid_active ? 'w-[45px] h-[45px]' : 'w-[120px] h-[120px] mb-5 text-2xl'} flex items-center justify-center transition-all rounded-full bg-gray-400 mx-auto `}>
+                            <span className={`capitalize font-bold ${is_vid_active ? 'text-[16px]' : 'text-2xl'}`}>
+                                {props.user.profile?.user?.username && props.user.profile?.user?.username[0]}
+                            </span>
                         </div>
                         <p className="text-white text-center text-xl">{props.user.profile?.user?.username ? props.user.profile?.user?.username : 'Your Name'}</p>
                     </div>

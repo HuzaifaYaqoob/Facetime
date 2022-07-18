@@ -1,14 +1,17 @@
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import MenuIcon from "../Utility/Icon"
 import { addUserMedia } from "../../redux/actions/userActions"
 import { MakeActiveTab } from '../../redux/actions/Utility'
 import { AddToPinnedStream } from "../../redux/actions/stream"
 import { useNavigate } from "react-router-dom"
 import { ShareScreenConnection } from "../../Constants/Connections/screenShareCon"
+import { useState } from "react"
 
 
 const MenuBlock = (props) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [more_dropdown, setMoreDropDown] = useState()
 
     const share_video_handler = () => {
         let user_stream = props.user.stream.video_stream
@@ -73,6 +76,13 @@ const MenuBlock = (props) => {
         })
         props.socket.video_socket.close()
         props.socket.active_video_socket.close()
+        dispatch({
+            type: 'ADD_OR_REMOVE_SNACK_BAR',
+            payload: {
+                message: `You left the meeting`,
+                type: 'info'
+            }
+        })
         navigate('/')
     }
 
@@ -161,7 +171,43 @@ const MenuBlock = (props) => {
                     active={true}
 
                 />
-                <MenuIcon
+                <div className="relative">
+                    <MenuIcon
+                        icon={
+                            <>
+                                <svg width="5" height="23" viewBox="0 0 5 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.75 3.46C3.42931 3.46 3.98 2.90931 3.98 2.23C3.98 1.55069 3.42931 1 2.75 1C2.07069 1 1.52 1.55069 1.52 2.23C1.52 2.90931 2.07069 3.46 2.75 3.46Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M2.75 12.48C3.42931 12.48 3.98 11.9293 3.98 11.25C3.98 10.5707 3.42931 10.02 2.75 10.02C2.07069 10.02 1.52 10.5707 1.52 11.25C1.52 11.9293 2.07069 12.48 2.75 12.48Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M2.75 21.5C3.42931 21.5 3.98 20.9493 3.98 20.27C3.98 19.5907 3.42931 19.04 2.75 19.04C2.07069 19.04 1.52 19.5907 1.52 20.27C1.52 20.9493 2.07069 21.5 2.75 21.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+
+                            </>
+                        }
+                        color='black'
+                        text='Options'
+                        onClick={(e) => {
+                            setMoreDropDown(!more_dropdown)
+                        }}
+                        active={true}
+                    />
+                    {
+                        more_dropdown &&
+                        <div className="bg-white max-w-[250px] w-[250px] rounded-md p-1 absolute bottom-full right-0 shadow-md">
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md mb-2 text-[#2f3f69]">
+                                Record Meeting
+                            </div>
+                            <div
+                                className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md text-red-600"
+                                onClick={() => {
+                                    LeaveMeeting()
+                                }}
+                            >
+                                Leave Meeting
+                            </div>
+                        </div>
+                    }
+                </div>
+                {/* <MenuIcon
                     icon={
                         <>
                             <svg className="w-[18px] h-[18px] md:w-[26px] md:h-[26px]" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,10 +218,7 @@ const MenuBlock = (props) => {
                     color='black'
                     text='leave'
                     active={true}
-                    onClick={() => {
-                        LeaveMeeting()
-                    }}
-                />
+                /> */}
             </div>
         </>
     )
