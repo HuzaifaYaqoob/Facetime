@@ -167,6 +167,12 @@ const MenuBlock = (props) => {
                     text='chat'
                     onClick={(e) => {
                         props.MakeActiveTab({ tab: 'CHAT' })
+                        dispatch(
+                            {
+                                type: 'ON_CHAT_NEW_MESSAGE',
+                                payload: false
+                            }
+                        )
                     }}
                     active={true}
 

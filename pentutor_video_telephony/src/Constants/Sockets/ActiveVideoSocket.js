@@ -149,6 +149,23 @@ const onNewMessage = async (e) => {
                 payload: new_data
             }
         )
+        store.dispatch(
+            {
+                type: 'ON_CHAT_NEW_MESSAGE',
+                payload: true
+            }
+        )
+        if (store.getState().utility.active_sidetab != 'CHAT') {
+            store.dispatch(
+                {
+                    type: 'ADD_OR_REMOVE_SNACK_BAR',
+                    payload: {
+                        message: 'New chat message',
+                        type: 'info'
+                    }
+                }
+            )
+        }
     }
 
 }
