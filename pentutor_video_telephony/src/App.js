@@ -16,6 +16,7 @@ import { Triangle } from 'react-loader-spinner'
 import { get_user } from "./redux/actions/Auth";
 import { TestStore } from "./Constants/testing/test";
 import InitializeWindowStore from "./Constants/storeConstants";
+import WhiteboardScreen from "./Pages/Whiteboard/Whiteboard";
 
 function App(props) {
   const loading_size = 80
@@ -83,6 +84,7 @@ function App(props) {
       }
       <Routes>
         <Route path="" element={<Homepage />} />
+        <Route path="/whiteboard" element={<WhiteboardScreen />} />
         {
           props.user.profile ?
             <>

@@ -256,6 +256,18 @@ const MenuBlock = (props) => {
                                 </>
                             }
                             <div
+                                className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md text-[#2f3f69]"
+                                onClick={() => {
+                                    setMoreDropDown(false)
+                                    let a = document.createElement('a');
+                                    a.target = '_blank';
+                                    a.href = '/whiteboard';
+                                    a.click();
+                                }}
+                            >
+                                White Board
+                            </div>
+                            <div
                                 className="py-2 px-3 hover:bg-gray-100 cursor-pointer rounded-md text-red-600"
                                 onClick={() => {
                                     LeaveMeeting()
