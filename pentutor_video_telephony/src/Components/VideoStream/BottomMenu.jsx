@@ -42,7 +42,7 @@ const MenuBlock = (props) => {
     }
 
     const share_screen_handler = async () => {
-        const screen_stream = null
+        let screen_stream = null
 
         try {
             screen_stream = await navigator.mediaDevices.getDisplayMedia()
