@@ -11,7 +11,7 @@ const MenuIcon = ({ text, color, icon, onClick, active, className, badge }) => {
                     {icon}
                     {
                         badge &&
-                        <span className="block w-[10px] h-[10px] rounded-full bg-orange-400 absolute top-2 right-2"></span>
+                        <span className="block w-[10px] h-[10px] rounded-full bg-orange-400 absolute top-1 right-1"></span>
                     }
                 </div>
                 <span className={`text-center capitalize text-xs md:text-md md:block hidden`}>{text}</span>
