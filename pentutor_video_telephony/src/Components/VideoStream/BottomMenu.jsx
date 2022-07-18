@@ -175,7 +175,7 @@ const MenuBlock = (props) => {
                         )
                     }}
                     active={true}
-
+                    badge={true}
                 />
                 <MenuIcon
                     icon={
