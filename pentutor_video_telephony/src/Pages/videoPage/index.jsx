@@ -49,7 +49,7 @@ const StreamPage = (props) => {
             stream_aud = await navigator.mediaDevices.getUserMedia({ audio: true }) || null
         } catch { }
 
-        if (!stream_vid || !stream_aud) {
+        if (!stream_vid && !stream_aud) {
             dispatch({
                 type: 'ADD_OR_REMOVE_SNACK_BAR',
                 payload: {
@@ -57,19 +57,23 @@ const StreamPage = (props) => {
                     type: 'warning'
                 }
             })
+            alert('Mic or Camera one of them is required to connect')
             navigate('/')
+            return
         }
         props.addUserMedia(
             {
-                video_stream: stream_vid,
-                audio_stream: stream_aud
+                video_stream: stream_vid ? stream_vid : null,
+                audio_stream: stream_aud ? stream_aud : null
             }
         )
-        props.AddToPinnedStream(
-            {
-                pinned_stream: stream_vid
-            }
-        )
+        if (stream_vid) {
+            props.AddToPinnedStream(
+                {
+                    pinned_stream: stream_vid
+                }
+            )
+        }
         success && success()
     }
 

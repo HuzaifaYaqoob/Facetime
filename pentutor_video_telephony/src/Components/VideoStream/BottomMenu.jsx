@@ -16,30 +16,40 @@ const MenuBlock = (props) => {
 
     const share_video_handler = () => {
         let user_stream = props.user.stream.video_stream
-        user_stream.getVideoTracks()[0].enabled = !user_stream.getVideoTracks()[0].enabled
-        props.addUserMedia(
-            {
-                video: user_stream
-            }
-        )
-        if (!props.stream.pinned_stream) {
-            props.AddToPinnedStream(
+        if (user_stream) {
+            user_stream.getVideoTracks()[0].enabled = !user_stream.getVideoTracks()[0].enabled
+            props.addUserMedia(
                 {
-                    pinned_stream: user_stream
+                    video: user_stream
                 }
             )
+            if (!props.stream.pinned_stream) {
+                props.AddToPinnedStream(
+                    {
+                        pinned_stream: user_stream
+                    }
+                )
+            }
+        }
+        else {
+            alert('Please allow camera access and try refreshing the page')
         }
     }
     const share_audio_handler = () => {
         let user_stream = props.user.stream.audio_stream
-        user_stream.getAudioTracks().forEach(track => {
-            track.enabled = !track.enabled
-        });
-        props.addUserMedia(
-            {
-                audio: user_stream
-            }
-        )
+        if (user_stream) {
+            user_stream.getAudioTracks().forEach(track => {
+                track.enabled = !track.enabled
+            });
+            props.addUserMedia(
+                {
+                    audio: user_stream
+                }
+            )
+        }
+        else{
+            alert('Please allow Mic access and try refreshing the page')
+        }
     }
 
     const share_screen_handler = async () => {
@@ -240,19 +250,18 @@ const MenuBlock = (props) => {
                                                 'Start Recording'
                                         }
                                     </div>
-                                    {
+                                    {/* {
 
                                         props.utility.recording_available &&
                                         <div
                                             className="py-2 px-3 hidden md:block hover:bg-gray-100 cursor-pointer rounded-md mb-2 text-[#2f3f69]"
                                             onClick={() => {
                                                 setMoreDropDown(false)
-                                                DownloadRecording()
                                             }}
                                         >
                                             Download Recording
                                         </div>
-                                    }
+                                    } */}
                                 </>
                             }
                             <div

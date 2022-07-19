@@ -57,29 +57,6 @@ export const startRecording = (data, success, fail) => {
     })
 }
 
-
-export const stopRecording = (data, success, fail) => {
-    const state = store.getState()
-
-    if (media_recorder) {
-        media_recorder.stop()
-    }
-
-    store.dispatch(
-        {
-            type: 'TOGGLE_RECORDING',
-            payload: false
-        }
-    )
-    store.dispatch({
-        type: 'ADD_OR_REMOVE_SNACK_BAR',
-        payload: {
-            message: 'Recording Stopped',
-            type: 'info'
-        }
-    })
-}
-
 export const DownloadRecording = (data, success, fail) => {
     let blob_obj = new Blob(chunks, { type: 'video/mp4' })
     console.log('gonna download')
@@ -93,6 +70,30 @@ export const DownloadRecording = (data, success, fail) => {
         type: 'ADD_OR_REMOVE_SNACK_BAR',
         payload: {
             message: 'Download started...',
+            type: 'info'
+        }
+    })
+}
+
+export const stopRecording = (data, success, fail) => {
+    const state = store.getState()
+
+    if (media_recorder) {
+        media_recorder.stop()
+        DownloadRecording()
+    }
+
+
+    store.dispatch(
+        {
+            type: 'TOGGLE_RECORDING',
+            payload: false
+        }
+    )
+    store.dispatch({
+        type: 'ADD_OR_REMOVE_SNACK_BAR',
+        payload: {
+            message: 'Recording Stopped',
             type: 'info'
         }
     })
