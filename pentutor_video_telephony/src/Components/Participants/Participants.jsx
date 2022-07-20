@@ -29,11 +29,11 @@ const User = ({ user_part, ...props }) => {
                             <video ref={rm_vid} muted className='h-auto w-auto max-w-full max-h-full' autoPlay />
                         </>
                         :
-                        <div className="h-[130px] w-[130px] rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">
+                        <div className="h-[100px] w-[100px] my-5 rounded-full text-white flex items-center justify-center text-5xl relative border-2 border-white bg-center bg-cover bg-no-repeat bg-gray-600">
                             {user_part.user.username[0]}
                         </div>
                 }
-                <p className={`${user_part.stream?.getVideoTracks()?.find(trc => trc.enabled) ? 'absolute top-0 left-0 right-0 py-2 px-2 text-white bg-black/50 backdrop-blur-sm' : 'static'}`}>
+                <p className={`${user_part.stream?.getVideoTracks()?.find(trc => trc.enabled) ? 'absolute top-0 left-0 right-0 py-2 px-2 bg-black/50 backdrop-blur-sm' : 'static'} text-white`}>
                     {user_part.user.username}{user_part.user.type == 'SCREEN' && ' - Screen Sharing'}
                 </p>
             </div>

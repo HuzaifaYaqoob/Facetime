@@ -30,6 +30,11 @@ export const startRecording = (data, success, fail) => {
         });
     }
 
+    state.connection.connections.map((cnt) => {
+        cnt.stream.getAudioTracks().forEach(trck => {
+            new_stream.addTrack(trck)
+        })
+    })
 
     let recorder = new MediaRecorder(new_stream, { mimeType: 'video/webM' })
 
@@ -82,7 +87,6 @@ export const stopRecording = (data, success, fail) => {
         media_recorder.stop()
         DownloadRecording()
     }
-
 
     store.dispatch(
         {

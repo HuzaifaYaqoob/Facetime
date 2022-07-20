@@ -5,10 +5,12 @@ import { RequestFulfilled } from "../../redux/actions/stream"
 import { store } from "../.."
 import { JoinVideoChatParticipants } from "../VideoChats/VideoChat"
 import { VIDEO_MEETING_ACCEPTED_TO_JOIN } from "../../redux/ActionTypes/VideoTypes"
+import { PlaySound } from "../Utility/utility"
 
 
 
 const handleNewUserRequest = async (message) => {
+    PlaySound()
     const state = store.getState()
     let socket = state.socket.active_video_socket
 
@@ -38,7 +40,7 @@ const onNewMessage = async (event) => {
             payload: true
         })
         JoinVideoChatParticipants(
-            {type : 'CAM'},
+            { type: 'CAM' },
             () => {
                 store.dispatch(
                     RequestFulfilled()
@@ -48,12 +50,12 @@ const onNewMessage = async (event) => {
     }
     else if (data.type === 'CONNECTION_REJECTED') {
         store.dispatch({
-            type : 'ADD_OR_REMOVE_SNACK_BAR',
-            payload : {
-              message : 'Host rejected you to join this meeting',
-              type : 'info'
+            type: 'ADD_OR_REMOVE_SNACK_BAR',
+            payload: {
+                message: 'Host rejected you to join this meeting',
+                type: 'info'
             }
-          })
+        })
         window.location.href = '/'
     }
 }

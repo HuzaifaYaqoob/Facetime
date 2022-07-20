@@ -140,7 +140,7 @@ const MenuBlock = (props) => {
                     onClick={() => {
                         share_video_handler()
                     }}
-                    active={props.user.stream.video_stream?.getVideoTracks()[0].enabled}
+                    active={props.user.stream.video_stream?.getVideoTracks()[0].enabled ? true : false}
                 />
                 <MenuIcon
                     icon={
@@ -156,7 +156,7 @@ const MenuBlock = (props) => {
                     onClick={() => {
                         share_audio_handler()
                     }}
-                    active={props.user.stream.audio_stream?.getAudioTracks()[0].enabled}
+                    active={props.user.stream.audio_stream?.getAudioTracks()[0].enabled ? true : false}
                 />
                 <MenuIcon
                     className='hidden md:block'

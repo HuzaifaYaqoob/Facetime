@@ -8,6 +8,7 @@ import { AddAnswerVideoChat, AddVideoChatParticipant } from "../VideoChats/Video
 import { REMOVE_USER_CONNECTION } from "../../redux/ActionTypes/connections"
 import { CHAT_NEW_MESSAGE } from "../../redux/ActionTypes/Chat"
 import { add_new_screen_share_connection, screen_share_response_answer } from "../Connections/screenShareCon"
+import { PlaySound } from "../Utility/utility"
 
 
 const onNewMessage = async (e) => {
@@ -156,6 +157,7 @@ const onNewMessage = async (e) => {
             }
         )
         if (store.getState().utility.active_sidetab != 'CHAT') {
+            PlaySound()
             store.dispatch(
                 {
                     type: 'ADD_OR_REMOVE_SNACK_BAR',
