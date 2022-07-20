@@ -6,7 +6,7 @@ import { AddToPinnedStream } from "../../redux/actions/stream"
 import { useNavigate } from "react-router-dom"
 import { ShareScreenConnection } from "../../Constants/Connections/screenShareCon"
 import { useState } from "react"
-import { DownloadRecording, startRecording, stopRecording } from "../../Constants/MediaRecording/MediaRecording"
+import { startRecording, stopRecording } from "../../Constants/MediaRecording/MediaRecording"
 
 
 const MenuBlock = (props) => {
