@@ -5,6 +5,7 @@ import { get_user } from "../../redux/actions/Auth";
 import Cookies from 'js-cookie'
 import { createNewVideoMeeting } from "../../redux/actions/Video";
 import { Triangle } from "react-loader-spinner";
+import Header from "../../Components/Header/Header";
 
 
 const Homepage = (props) => {
@@ -67,6 +68,7 @@ const Homepage = (props) => {
     }, [])
     return (
         <>
+            <Header />
             <div className="flex items-center p-3 sm:p-0 justify-center md:justify-between flex-col md:flex-row h-screen max-w-5xl mx-auto gap-10">
                 <div className="md:flex-1">
                     <h3 className="text-4xl text-center mb-2 text-gray-900">Premium video meeting now free for everyone</h3>
@@ -113,7 +115,7 @@ const Homepage = (props) => {
                                             className="px-4 py-2 rounded-full bg-[#2f3f69] hover:bg-[#2f3f69] text-white max-w-max cursor-pointer text-lg"
                                         >Login</div>
                                     </Link>
-                                    <a href={'https://pentutor.com'} target='_blank'>
+                                    <a href={'https://redexpo.co.uk'} target='_blank'>
                                         <div
                                             className="px-4 py-2 rounded-full bg-[#2f3f69] hover:bg-[#2f3f69] text-white max-w-max cursor-pointer text-lg"
                                         >Register</div>

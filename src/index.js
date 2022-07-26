@@ -13,7 +13,7 @@ import { BrowserRouter } from 'react-router-dom';
 export const store = createStore(rootReducer, applyMiddleware(thunk))
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('facetime_root'));
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
