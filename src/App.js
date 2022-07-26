@@ -61,15 +61,15 @@ function App(props) {
   }, [props.utility.snack_bar])
   return (
     <>
-      {
+      {/* {
         props.utility.loading ?
           <div className="cover fixed bg-gray-100/50 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
             <Triangle ariaLabel="indicator" color='blue' width={loading_size} height={loading_size} />
           </div>
           :
           <></>
-      }
-      {
+      } */}
+      {/* {
         props.utility.snack_bar &&
         <div>
           <SnackBar
@@ -81,7 +81,7 @@ function App(props) {
             onYes={() => { }}
           />
         </div>
-      }
+      } */}
       <Routes>
         <Route path="" element={<Homepage />} />
         <Route path="/whiteboard" element={<WhiteboardScreen />} />
