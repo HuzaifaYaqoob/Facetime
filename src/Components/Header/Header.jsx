@@ -26,7 +26,7 @@ NavItem.defaultProps = {
 const Header = () => {
     return (
         <>
-            <header className="w-full bg-[#011931]">
+            <header className="w-full bg-[#011931] z-20 fixed top-0 backdrop-blur-md">
                 <div className="max-w-[1350px] py-4 w-full mx-auto h-[full] flex items-center justify-between">
                     <div>
                         <img className="w-[70px] cursor-pointer" src={`${process.env.PUBLIC_URL}/images/facetime-logo.png`} alt="" />
