@@ -7,6 +7,7 @@ import { createNewVideoMeeting } from "../../redux/actions/Video";
 import { Triangle } from "react-loader-spinner";
 import Header from "../../Components/Header/Header";
 import HeroSection from "../../Components/Home/HeroSection";
+import GetInsighntsSection from "../../Components/Home/GetInsights";
 
 
 const Homepage = (props) => {
@@ -71,7 +72,8 @@ const Homepage = (props) => {
         <>
             <Header />
             <HeroSection />
-            <div className="flex items-center p-3 sm:p-0 justify-center md:justify-between flex-col md:flex-row h-screen max-w-5xl mx-auto gap-10">
+            <GetInsighntsSection />
+            {/* <div className="flex items-center p-3 sm:p-0 justify-center md:justify-between flex-col md:flex-row h-screen max-w-5xl mx-auto gap-10">
                 <div className="md:flex-1">
                     <h3 className="text-4xl text-center mb-2 text-gray-900">Premium video meeting now free for everyone</h3>
                     <p className="text-center text-gray-600">We built for students, Teachers and Businesses to make it free and available for all.</p>
@@ -133,7 +135,7 @@ const Homepage = (props) => {
                 >
 
                 </div>
-            </div>
+            </div> */}
         </>
     )
 }
